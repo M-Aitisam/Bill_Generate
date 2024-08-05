@@ -1,0 +1,41 @@
+﻿@page "/ratelist"
+@using System.Collections.Generic
+@inject NavigationManager Navigation
+
+<h3>Rate List</h3>
+
+<ul>
+    @foreach (var item in RateItems)
+    {
+        <li>
+            @item.Name - @item.Price
+            <button @onclick="() => AddToBill(item)">Add</button>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter]
+    public EventCallback<RateItem> OnAddToBill { get; set; }
+
+    // Predefined list of items
+    public List<RateItem> RateItems { get; set; } = new List<RateItem>
+    {
+        new RateItem { Name = "Haircut - Short", Price = 200 },
+        new RateItem { Name = "Haircut - Long", Price = 300 },
+        new RateItem { Name = "Shave", Price = 150 },
+        // Add more predefined items here...
+    };
+
+    private async Task AddToBill(RateItem item)
+    {
+        // Notify parent component to add item to the bill
+        await OnAddToBill.InvokeAsync(item);
+    }
+
+    public class RateItem
+    {
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+    }
+}

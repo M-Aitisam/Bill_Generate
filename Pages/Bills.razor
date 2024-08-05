@@ -1,0 +1,37 @@
+﻿@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+
+@page "/bills"
+@using System.Collections.Generic
+
+<h3>Bills</h3>
+
+<div>
+    <h4>Selected Items</h4>
+    <ul>
+        @foreach (var item in SelectedItems)
+        {
+            <li>@item.Name - @item.Price <button @onclick="() => RemoveItem(item)">Remove</button></li>
+        }
+    </ul>
+    <p>Total: @TotalAmount</p>
+    <button @onclick="SaveBill">Save Bill</button>
+</div>
+
+@code {
+    [Parameter]
+    public List<RateList.RateItem> SelectedItems { get; set; } = new List<RateList.RateItem>();
+
+    private decimal TotalAmount => SelectedItems.Sum(item => item.Price);
+
+    private void RemoveItem(RateList.RateItem item)
+    {
+        SelectedItems.Remove(item);
+    }
+
+    private void SaveBill()
+    {
+        // Implement save functionality here
+        // For example, save to a database or local storage
+    }
+}
