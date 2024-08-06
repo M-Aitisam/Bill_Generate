@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Blazored.LocalStorage;
 using Bill_Generate.Models;
+using Bill_Generate.Pages;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<BillService>();
+
 
 
 var app = builder.Build();
