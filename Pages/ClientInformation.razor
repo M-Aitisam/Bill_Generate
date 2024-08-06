@@ -1,7 +1,8 @@
 ﻿
 @page "/clientinformation"
-<h3>Client Information</h3>
 
+<div>
+<h3>Client Information</h3>
 <div>
     <label>First Name:</label>
     <input type="text" @bind="client.FirstName" />
@@ -14,7 +15,7 @@
     <label>Barber Name:</label>
     <input type="text" @bind="client.BarberName" />
 </div>
-
+</div>
 @code {
     private Client client = new Client();
 

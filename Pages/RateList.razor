@@ -1,8 +1,11 @@
-﻿@page "/ratelist"
+﻿
+@page "/ratelist"
+
 @using System.Collections.Generic
 @inject NavigationManager Navigation
 @inject BillService BillService
 
+<div>
 <h3>Rate List</h3>
 
 <ul>
@@ -14,7 +17,7 @@
         </li>
     }
 </ul>
-
+</div>
 @code {
     // Predefined list of items
     public List<RateItem> RateItems { get; set; } = new List<RateItem>
