@@ -1,37 +1,47 @@
-﻿@using Blazored.LocalStorage
+﻿@page "/bills"
+@using Blazored.LocalStorage
 @inject ILocalStorageService LocalStorage
-
-@page "/bills"
-@using System.Collections.Generic
+@inject BillService BillService
 
 <h3>Bills</h3>
 
 <div>
     <h4>Selected Items</h4>
     <ul>
-        @foreach (var item in SelectedItems)
+        @foreach (var item in BillService.SelectedItems)
         {
             <li>@item.Name - @item.Price <button @onclick="() => RemoveItem(item)">Remove</button></li>
         }
     </ul>
-    <p>Total: @TotalAmount</p>
+    <p>Total: @BillService.TotalAmount</p>
     <button @onclick="SaveBill">Save Bill</button>
 </div>
 
 @code {
-    [Parameter]
-    public List<RateList.RateItem> SelectedItems { get; set; } = new List<RateList.RateItem>();
-
-    private decimal TotalAmount => SelectedItems.Sum(item => item.Price);
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBill();
+    }
 
     private void RemoveItem(RateList.RateItem item)
     {
-        SelectedItems.Remove(item);
+        BillService.RemoveItem(item);
     }
 
-    private void SaveBill()
+    private async Task SaveBill()
     {
-        // Implement save functionality here
-        // For example, save to a database or local storage
+        await LocalStorage.SetItemAsync("savedBill", BillService.SelectedItems);
+    }
+
+    private async Task LoadBill()
+    {
+        var savedItems = await LocalStorage.GetItemAsync<List<RateList.RateItem>>("savedBill");
+        if (savedItems != null)
+        {
+            foreach (var item in savedItems)
+            {
+                BillService.AddItem(item);
+            }
+        }
     }
 }

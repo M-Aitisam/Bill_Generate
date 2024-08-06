@@ -1,6 +1,7 @@
 ﻿@page "/ratelist"
 @using System.Collections.Generic
 @inject NavigationManager Navigation
+@inject BillService BillService
 
 <h3>Rate List</h3>
 
@@ -15,9 +16,6 @@
 </ul>
 
 @code {
-    [Parameter]
-    public EventCallback<RateItem> OnAddToBill { get; set; }
-
     // Predefined list of items
     public List<RateItem> RateItems { get; set; } = new List<RateItem>
     {
@@ -27,10 +25,9 @@
         // Add more predefined items here...
     };
 
-    private async Task AddToBill(RateItem item)
+    private void AddToBill(RateItem item)
     {
-        // Notify parent component to add item to the bill
-        await OnAddToBill.InvokeAsync(item);
+        BillService.AddItem(item);
     }
 
     public class RateItem
