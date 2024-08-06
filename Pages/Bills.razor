@@ -7,14 +7,22 @@
 
 <div>
     <h4>Selected Items</h4>
-    <ul>
-        @foreach (var item in BillService.SelectedItems)
-        {
-            <li>@item.Name - @item.Price <button @onclick="() => RemoveItem(item)">Remove</button></li>
-        }
-    </ul>
-    <p>Total: @BillService.TotalAmount</p>
-    <button @onclick="SaveBill">Save Bill</button>
+    @if (BillService.SelectedItems.Any())
+    {
+        <ul>
+            @foreach (var item in BillService.SelectedItems)
+            {
+                <li>@item.Name - @item.Price <button @onclick="() => RemoveItem(item)">Remove</button></li>
+            }
+        </ul>
+        <p>Total: @BillService.TotalAmount</p>
+        <button @onclick="SaveBill">Save Bill</button>
+        <button @onclick="ClearBill">Clear Bill</button>
+    }
+    else
+    {
+        <p>No items have been added to the bill.</p>
+    }
 </div>
 
 @code {
@@ -26,11 +34,12 @@
     private void RemoveItem(RateList.RateItem item)
     {
         BillService.RemoveItem(item);
+        SaveBill().ConfigureAwait(false); // Update local storage after removing
     }
 
     private async Task SaveBill()
     {
-        await LocalStorage.SetItemAsync("savedBill", BillService.SelectedItems);
+        await LocalStorage.SetItemAsync("savedBill", BillService.SelectedItems.ToList());
     }
 
     private async Task LoadBill()
@@ -38,10 +47,13 @@
         var savedItems = await LocalStorage.GetItemAsync<List<RateList.RateItem>>("savedBill");
         if (savedItems != null)
         {
-            foreach (var item in savedItems)
-            {
-                BillService.AddItem(item);
-            }
+            BillService.LoadItems(savedItems);
         }
+    }
+
+    private async Task ClearBill()
+    {
+        BillService.ClearItems();
+        await LocalStorage.RemoveItemAsync("savedBill"); // Clear local storage
     }
 }
