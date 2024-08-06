@@ -17,9 +17,14 @@ public class BillService
     }
 
     public decimal TotalAmount => SelectedItems.Sum(item => item.Price);
-}
-public class RateItem
-{
-    public string Name { get; set; } = string.Empty;
-    public decimal Price { get; set; }
+
+    public List<RateList.RateItem> GetSavedItems()
+    {
+        // Return the list of selected items
+        return SelectedItems;
+    }
+    public void ClearAllItems()
+    {
+        SelectedItems.Clear();
+    }
 }

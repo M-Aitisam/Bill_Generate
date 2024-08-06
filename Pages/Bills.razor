@@ -1,49 +1,33 @@
-﻿﻿@page "/bills"
-@page "/bills"
+﻿@page "/bills"
 
-@using Blazored.LocalStorage
-@inject ILocalStorageService LocalStorage
 @inject BillService BillService
 
-<h3>Bills</h3>
+<div style="background-color:pink; padding:2vw; width: 25vw;">
+    <h3 style="display: flex;align-items:center; justify-content:center; font-weight:bold">Bills</h3>
 
-<div>
-    <h4>Selected Items</h4>
+    <h5 style="display: flex;align-items:center; justify-content:center; font-weight:bold">Selected Items</h5>
     <ul>
-        @foreach (var item in BillService.SelectedItems)
+        @for (int i = 0; i < BillService.SelectedItems.Count; i++)
         {
-            <li>@item.Name - @item.Price <button @onclick="() => RemoveItem(item)">Remove</button></li>
+            var item = BillService.SelectedItems[i];
+            <li style="display: flex; align-items:center;justify-content:space-between; margin-top:10px">
+                @item.Name - @item.Price
+                <button class="btn btn-outline-success" @onclick="() => RemoveItem(item)">Remove</button>
+            </li>
         }
     </ul>
-    <p>Total: @BillService.TotalAmount</p>
-    <button @onclick="SaveBill">Save Bill</button>
+    <p style="display: flex;align-items:center; justify-content:center; font-weight:bold">Total: @BillService.TotalAmount</p>
+    <button class="btn btn-outline-danger" @onclick="ClearItems">Clear All</button>
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadBill();
-    }
-
     private void RemoveItem(RateList.RateItem item)
     {
         BillService.RemoveItem(item);
     }
 
-    private async Task SaveBill()
+    private void ClearItems()
     {
-        await LocalStorage.SetItemAsync("savedBill", BillService.SelectedItems);
-    }
-
-    private async Task LoadBill()
-    {
-        var savedItems = await LocalStorage.GetItemAsync<List<RateList.RateItem>>("savedBill");
-        if (savedItems != null)
-        {
-            foreach (var item in savedItems)
-            {
-                BillService.AddItem(item);
-            }
-        }
+        BillService.ClearAllItems();
     }
 }
