@@ -2,21 +2,21 @@
 
 @inject BillService BillService
 
-<div style="background-color:lightgreen; padding:2vw; width: 30vw;">
+<div style="border-right:1px solid black; padding:2vw; width: 30vw;">
     <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; -webkit-text-stroke:1px black ; color:darkgreen; padding-bottom:2vh">Client Information</h3>
     <hr />
 
     <div>
         <label>First Name:</label>
-        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border-style:none; margin: 1px 0px 2px 3vw" @bind="client.FirstName" />
+        <input type="text" style="padding:2px; border-radius:5px; width:17vw;border:1px solid green;  margin: 1px 0px 2px 3vw" @bind="client.FirstName" />
     </div>
     <div>
         <label>Phone Number:</label>
-        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border-style:none; margin: 1vh 0px 2px 1.1vw" @bind="client.PhoneNumber" />
+        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1vh 0px 2px 1.1vw" @bind="client.PhoneNumber" />
     </div>
     <div>
         <label>Barber Name:</label>
-        <select style="padding:2px; border-radius:5px; width:17vw; border-style:none; margin: 1vh 0px 2px 2vw" @bind="client.BarberName">
+        <select style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1vh 0px 2px 2vw" @bind="client.BarberName">
             @foreach (var barber in barbers)
             {
                 <option value="@barber">@barber</option>
@@ -24,7 +24,7 @@
         </select>
     </div>
     <div style="margin-top: 2vh;">
-        <button @onclick="AddToBill" class="btn btn-outline-success" style="padding: 5px 10px; border-radius: 5px; ">Add to Bill</button>
+        <button @onclick="AddToBill" class="btn btn-outline-success" style="padding: 5px 10px;margin: 2vh 0 0 35%; border-radius: 5px; ">Add to Bill</button>
     </div>
 
     @if (savedClient != null)
