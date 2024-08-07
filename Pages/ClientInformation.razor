@@ -1,5 +1,7 @@
 ﻿@page "/clientinformation"
 
+@inject BillService BillService
+
 <div style="background-color:lightgreen; padding:2vw; width: 30vw;">
     <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; padding-bottom:2vh">Client Information</h3>
 
@@ -22,7 +24,7 @@
         </select>
     </div>
     <div style="margin-top: 2vh;">
-        <button @onclick="SaveClient" style="padding: 5px 10px; border-radius: 5px; background-color: #007bff; color: white; border: none;">Save</button>
+        <button @onclick="SaveClient" class="btn btn-outline-success" style="padding: 5px 10px; border-radius: 5px; ">Save</button>
     </div>
 
     @if (savedClient != null)
@@ -32,14 +34,23 @@
             <div><strong>First Name:</strong> @savedClient.FirstName</div>
             <div><strong>Phone Number:</strong> @savedClient.PhoneNumber</div>
             <div><strong>Barber Name:</strong> @savedClient.BarberName</div>
+        <h4>Bill Details</h4>
+            <ul>
+                @foreach (var item in BillService.SelectedItems)
+                {
+                    <li>@item.Name - @item.Price</li>
+                }
+            </ul>
+            <p>Total: @BillService.TotalAmount</p>
         </div>
+        
     }
 </div>
 
 @code {
     private Client client = new Client();
     private Client? savedClient;
-    private List<string> barbers = new List<string> { "John", "Jane", "Alex", "Sam" };
+    private List<string> barbers = new List<string> { "John", "Jane", "Alex", "Sam"   , "Moiz" , "Shoaib" };
 
     public class Client
     {
