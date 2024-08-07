@@ -1,32 +1,61 @@
 ﻿@page "/clientinformation"
 
 <div style="background-color:lightgreen; padding:2vw; width: 30vw;">
-    
-    <h3 style=" display: flex;align-items:center; justify-content:center; font-weight:bold ;padding-bottom:2vh">Client Information</h3>
- 
-    
+    <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; padding-bottom:2vh">Client Information</h3>
+
     <div>
-        <label > First Name:</label>
-        <input type="text" style="padding:2px; border-radius:5px ; width:17vw; border-style:none; margin: 1px 0px 2px 3vw" @bind="client.FirstName" />
+        <label>First Name:</label>
+        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border-style:none; margin: 1px 0px 2px 3vw" @bind="client.FirstName" />
     </div>
     <div>
         <label>Phone Number:</label>
-        <input type="text" style="padding:2px; border-radius:5px ;width:17vw; border-style:none; margin: 1vh 0px 2px 1.1vw" @bind="client.PhoneNumber" />
+        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border-style:none; margin: 1vh 0px 2px 1.1vw" @bind="client.PhoneNumber" />
     </div>
     <div>
         <label>Barber Name:</label>
-        <input type="text" style="padding:2px; border-radius:5px ; width:17vw; border-style:none;margin: 1vh 0px 2px 2vw" @bind="client.BarberName" />
+        <select style="padding:2px; border-radius:5px; width:17vw; border-style:none; margin: 1vh 0px 2px 2vw" @bind="client.BarberName">
+            @foreach (var barber in barbers)
+            {
+                <option value="@barber">@barber</option>
+            }
+
+        </select>
+    </div>
+    <div style="margin-top: 2vh;">
+        <button @onclick="SaveClient" style="padding: 5px 10px; border-radius: 5px; background-color: #007bff; color: white; border: none;">Save</button>
     </div>
 
-    
+    @if (savedClient != null)
+    {
+        <div style="background-color: lightyellow; padding: 2vw; width: 20vw; margin-top: 2vh;">
+            <h3 style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size:1.30rem; padding-bottom: 2vh;">Saved Client Information</h3>
+            <div><strong>First Name:</strong> @savedClient.FirstName</div>
+            <div><strong>Phone Number:</strong> @savedClient.PhoneNumber</div>
+            <div><strong>Barber Name:</strong> @savedClient.BarberName</div>
+        </div>
+    }
 </div>
+
 @code {
     private Client client = new Client();
+    private Client? savedClient;
+    private List<string> barbers = new List<string> { "John", "Jane", "Alex", "Sam" };
 
     public class Client
     {
         public string? FirstName { get; set; }
         public string? PhoneNumber { get; set; }
         public string? BarberName { get; set; }
+    }
+    private void SaveClient()
+    {
+        savedClient = new Client
+            {
+                FirstName = client.FirstName,
+                PhoneNumber = client.PhoneNumber,
+                BarberName = client.BarberName
+            };
+        // Clear the form after saving
+        client = new Client();
     }
 }
