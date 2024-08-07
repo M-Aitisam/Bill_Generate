@@ -70,13 +70,13 @@
                 BarberName = client.BarberName
             };
 
-        // Add an item to the bill
-        BillService.AddItem(new RateList.RateItem { Name = "Haircut", Price = 20.0m });
+        
+        
 
         // Clear the form after adding to bill
         client = new Client();
 
-        // Ensure the UI is updated
+       
         await InvokeAsync(StateHasChanged);
     }
 

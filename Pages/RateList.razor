@@ -14,7 +14,7 @@
     {
         <li style=" display:flex; align-items:center; justify-content:space-between;">
             @item.Name - @item.Price
-                <button style=" margin-top:10px; " class="btn  btn-outline-success" @onclick="() => AddToBill(item)">Add</button>
+                <button style=" margin-top:10px;" class="btn  btn-outline-success" @onclick="() => AddToBill(item)">Add</button>
         </li>
     }
 </ul>
@@ -23,8 +23,8 @@
     // Predefined list of items
     public List<RateItem> RateItems { get; set; } = new List<RateItem>
     {
-       new RateItem { Name = "Haircut - Short", Price = 200 },
-new RateItem { Name = "Haircut - Long", Price = 300 },
+       new RateItem { Name = "Haircut - Short", Price = 200 ,ImageUrl = "/images/haircut_short.jpg "},
+new RateItem { Name = "Haircut - Long", Price = 300  },
 new RateItem { Name = "Shave", Price = 150 },
 new RateItem { Name = "Beard Trim", Price = 100 },
 new RateItem { Name = "Hair Coloring", Price = 500 },
@@ -35,8 +35,7 @@ new RateItem { Name = "Pedicure", Price = 400 },
 new RateItem { Name = "Head Massage", Price = 200 },
 new RateItem { Name = "Back Massage", Price = 300 },
 
-
-    };
+};
 
     private void AddToBill(RateItem item)
     {
@@ -47,5 +46,6 @@ new RateItem { Name = "Back Massage", Price = 300 },
     {
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }
