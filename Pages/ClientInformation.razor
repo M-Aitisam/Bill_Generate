@@ -3,7 +3,8 @@
 @inject BillService BillService
 
 <div style="background-color:lightgreen; padding:2vw; width: 30vw;">
-    <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; padding-bottom:2vh">Client Information</h3>
+    <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; -webkit-text-stroke:1px black ; color:darkgreen; padding-bottom:2vh">Client Information</h3>
+    <hr />
 
     <div>
         <label>First Name:</label>
@@ -20,37 +21,38 @@
             {
                 <option value="@barber">@barber</option>
             }
-
         </select>
     </div>
     <div style="margin-top: 2vh;">
-        <button @onclick="SaveClient" class="btn btn-outline-success" style="padding: 5px 10px; border-radius: 5px; ">Save</button>
+        <button @onclick="AddToBill" class="btn btn-outline-success" style="padding: 5px 10px; border-radius: 5px; ">Add to Bill</button>
     </div>
 
     @if (savedClient != null)
     {
-        <div style="background-color: lightyellow; padding: 2vw; width: 20vw; margin-top: 2vh;">
-            <h3 style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size:1.30rem; padding-bottom: 2vh;">Saved Client Information</h3>
+        <div style="border:1px solid black;  padding: 2vw; width: 20vw; margin: 5vh 0  0 3vw; ">
+            <h3 style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size:1.30rem; padding-bottom: 2vh;"> Barber Republic </h3>
             <div><strong>First Name:</strong> @savedClient.FirstName</div>
             <div><strong>Phone Number:</strong> @savedClient.PhoneNumber</div>
             <div><strong>Barber Name:</strong> @savedClient.BarberName</div>
-        <h4>Bill Details</h4>
-            <ul>
+            <hr />
+
+            <h4 style="display:flex;align-items:center; justify-content:center; margin-top:2vh"> Bill Details</h4>
+
+            <ul style="margin-left:1vw ">
                 @foreach (var item in BillService.SelectedItems)
                 {
                     <li>@item.Name - @item.Price</li>
                 }
             </ul>
-            <p>Total: @BillService.TotalAmount</p>
+            <p style="-webkit-text-stroke:1px black ; color:darkgreen;  align-items:center; display:flex; justify-content:center"> Total: @BillService.TotalAmount</p>
         </div>
-        
     }
 </div>
 
 @code {
     private Client client = new Client();
     private Client? savedClient;
-    private List<string> barbers = new List<string> { "John", "Jane", "Alex", "Sam"   , "Moiz" , "Shoaib" };
+    private List<string> barbers = new List<string> { "John", "Jane", "Alex", "Sam", "Moiz", "Shoaib" };
 
     public class Client
     {
@@ -58,7 +60,8 @@
         public string? PhoneNumber { get; set; }
         public string? BarberName { get; set; }
     }
-    private void SaveClient()
+
+    private async Task AddToBill()
     {
         savedClient = new Client
             {
@@ -66,7 +69,24 @@
                 PhoneNumber = client.PhoneNumber,
                 BarberName = client.BarberName
             };
-        // Clear the form after saving
+
+        // Add an item to the bill
+        BillService.AddItem(new RateList.RateItem { Name = "Haircut", Price = 20.0m });
+
+        // Clear the form after adding to bill
         client = new Client();
+
+        // Ensure the UI is updated
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override void OnInitialized()
+    {
+        BillService.OnChange += async () => await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        BillService.OnChange -= async () => await InvokeAsync(StateHasChanged);
     }
 }
