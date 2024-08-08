@@ -1,21 +1,31 @@
 ﻿@page "/bills"
 @inject BillService BillService
 
-<div style=" padding:2vw; width: 25vw;   ">
-    <h3 style="display: flex;align-items:center; justify-content:center; -webkit-text-stroke:1px black ; color:darkgreen; padding-bottom:2vh; font-weight:bold">Bills</h3>
+<div style="padding:2vw; width: 25vw;">
+    <h3 style="display: flex; align-items:center; justify-content:center; -webkit-text-stroke:1px black; color:darkgreen; padding-bottom:2vh; font-weight:bold;">
+        Bills
+    </h3>
     <hr />
     <ul>
         @for (int i = 0; i < BillService.SelectedItems.Count; i++)
         {
             var item = BillService.SelectedItems[i];
-            <li style="display: flex; align-items:center;justify-content:space-between; margin-top:10px">
-                @item.Name - @item.Price
+            <li style="display: flex; align-items:center; justify-content:space-between; margin-top:10px;">
+                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    <img src="@item.ImageUrl" alt="@item.Name" style="width:20px;  height:auto; margin-right:10px;" />
+                }
+                <div style="flex: 1;">
+                    @item.Name - @item.Price
+                </div>
                 <button class="btn btn-outline-success" @onclick="() => RemoveItem(item)">Remove</button>
             </li>
         }
     </ul>
-    <p style="display: flex;align-items:center; justify-content:center; font-weight:bold">Total: @BillService.TotalAmount</p>
-    <button class="btn btn-outline-danger " style="margin: 2vh 0 0 35%" @onclick="ClearItems">Clear All</button>
+    <p style="display: flex; align-items:center; justify-content:center; font-weight:bold;">
+        Total: @BillService.TotalAmount
+    </p>
+    <button class="btn btn-outline-danger" style="margin: 2vh 0 0 35%;" @onclick="ClearItems">Clear All</button>
 </div>
 
 @code {

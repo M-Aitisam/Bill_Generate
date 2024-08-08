@@ -3,20 +3,22 @@
 @inject BillService BillService
 
 <div style="border-right:1px solid black; padding:2vw; width: 30vw;">
-    <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; -webkit-text-stroke:1px black ; color:darkgreen; padding-bottom:2vh">Client Information</h3>
+    <h3 style="display: flex; align-items:center; justify-content:center; font-weight:bold; -webkit-text-stroke:1px black; color:darkgreen; padding-bottom:2vh;">
+        Client Information
+    </h3>
     <hr />
 
     <div>
         <label>First Name:</label>
-        <input type="text" style="padding:2px; border-radius:5px; width:17vw;border:1px solid green;  margin: 1px 0px 2px 3vw" @bind="client.FirstName" />
+        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1px 0px 2px 3vw;" @bind="client.FirstName" />
     </div>
     <div>
         <label>Phone Number:</label>
-        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1vh 0px 2px 1.1vw" @bind="client.PhoneNumber" />
+        <input type="text" style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1vh 0px 2px 1.1vw;" @bind="client.PhoneNumber" />
     </div>
     <div>
         <label>Barber Name:</label>
-        <select style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1vh 0px 2px 2vw" @bind="client.BarberName">
+        <select style="padding:2px; border-radius:5px; width:17vw; border:1px solid green; margin: 1vh 0px 2px 2vw;" @bind="client.BarberName">
             @foreach (var barber in barbers)
             {
                 <option value="@barber">@barber</option>
@@ -24,27 +26,43 @@
         </select>
     </div>
     <div style="margin-top: 2vh;">
-        <button @onclick="AddToBill" class="btn btn-outline-success" style="padding: 5px 10px;margin: 2vh 0 0 35%; border-radius: 5px; ">Add to Bill</button>
+        <button @onclick="AddToBill" class="btn btn-outline-success" style="padding: 5px 10px; margin: 2vh 0 0 35%; border-radius: 5px;">Add to Bill</button>
     </div>
 
     @if (savedClient != null)
     {
-        <div style="border:1px solid black;  padding: 2vw; width: 20vw; margin: 5vh 0  0 3vw; ">
-            <h3 style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size:1.30rem; padding-bottom: 2vh;"> Barber Republic </h3>
+        <div style="border:1px solid black; padding: 2vw; width: 20vw; margin: 5vh 0 0 3vw;">
+            <h3 style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size:1.30rem; padding-bottom: 2vh;">
+                Barber Republic
+            </h3>
+
+            @if (savedClient.ImageUrl != null)
+            {
+                <img src="@savedClient.ImageUrl" alt="Client Image" style="width:100px; height:100px; display:block; margin:auto;" />
+            }
+
             <div><strong>First Name:</strong> @savedClient.FirstName</div>
             <div><strong>Phone Number:</strong> @savedClient.PhoneNumber</div>
             <div><strong>Barber Name:</strong> @savedClient.BarberName</div>
             <hr />
 
-            <h4 style="display:flex;align-items:center; justify-content:center; margin-top:2vh"> Bill Details</h4>
+            <h4 style="display:flex; align-items:center; justify-content:center; margin-top:2vh;">Bill Details</h4>
 
-            <ul style="margin-left:1vw ">
+            <ul style="margin-left:1vw;">
                 @foreach (var item in BillService.SelectedItems)
                 {
-                    <li>@item.Name - @item.Price</li>
+                    <li>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="Item Image" style="width:20px;  height:auto; margin-right:10px;" />
+                        }
+                        @item.Name - @item.Price
+                    </li>
                 }
             </ul>
-            <p style="-webkit-text-stroke:1px black ; color:darkgreen;  align-items:center; display:flex; justify-content:center"> Total: @BillService.TotalAmount</p>
+            <p style="-webkit-text-stroke:1px black; color:darkgreen; align-items:center; display:flex; justify-content:center;">
+                Total: @BillService.TotalAmount
+            </p>
         </div>
     }
 </div>
@@ -59,6 +77,7 @@
         public string? FirstName { get; set; }
         public string? PhoneNumber { get; set; }
         public string? BarberName { get; set; }
+        public string? ImageUrl { get; set; }  // Added property for client image URL
     }
 
     private async Task AddToBill()
@@ -67,16 +86,13 @@
             {
                 FirstName = client.FirstName,
                 PhoneNumber = client.PhoneNumber,
-                BarberName = client.BarberName
+                BarberName = client.BarberName,
+                ImageUrl = "/images/client_image.jpg"  // Set the URL of the client image here
             };
-
-        
-        
 
         // Clear the form after adding to bill
         client = new Client();
 
-       
         await InvokeAsync(StateHasChanged);
     }
 
