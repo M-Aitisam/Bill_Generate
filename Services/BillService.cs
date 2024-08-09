@@ -8,7 +8,7 @@ public class BillService
     public List<RateList.RateItem> SelectedItems { get; private set; } = new List<RateList.RateItem>();
     public decimal TotalAmount => SelectedItems.Sum(item => item.Price);
 
-    public event Action OnChange;
+    public event Action? OnChange;
 
     public void AddItem(RateList.RateItem item)
     {
