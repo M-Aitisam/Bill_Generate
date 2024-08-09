@@ -12,8 +12,11 @@ public class BillService
 
     public void AddItem(RateList.RateItem item)
     {
-        SelectedItems.Add(item);
-        NotifyStateChanged();
+        if (!SelectedItems.Any(i => i.Name == item.Name)) // Check if item already exists
+        {
+            SelectedItems.Add(item);
+            NotifyStateChanged();
+        }
     }
 
     public void RemoveItem(RateList.RateItem item)

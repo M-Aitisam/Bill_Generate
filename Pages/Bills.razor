@@ -1,29 +1,31 @@
 ﻿@page "/bills"
 @inject BillService BillService
 
-<div style="padding:2vw; width: 25vw;">
+<div style="padding:2vw; width: 30vw; border:1px solid black; border-radius: 8px;">
     <h3 style="display: flex; align-items:center; justify-content:center; -webkit-text-stroke:1px black; color:darkgreen; padding-bottom:2vh; font-weight:bold;">
         Bills
     </h3>
     <hr />
-    <ul>
-        @for (int i = 0; i < BillService.SelectedItems.Count; i++)
+    <ul style="list-style-type: none; padding: 0;">
+        @foreach (var item in BillService.SelectedItems)
         {
-            var item = BillService.SelectedItems[i];
-            <li style="display: flex; align-items:center; justify-content:space-between; margin-top:10px;">
-                @if (!string.IsNullOrEmpty(item.ImageUrl))
-                {
-                    <img src="@item.ImageUrl" alt="@item.Name" style="width:20px;  height:auto; margin-right:10px;" />
-                }
-                <div style="flex: 1;">
-                    @item.Name - @item.Price
+            <li style="display: flex; align-items:center; justify-content:space-between; margin-bottom: 10px; padding: 5px; border-bottom: 1px solid #ddd;">
+                <div style="flex: 2;">
+                    @item.Name
                 </div>
-                <button class="btn btn-outline-success" @onclick="() => RemoveItem(item)">Remove</button>
+                <div style="flex: 1; text-align: center;">
+                    1 <!-- Assuming quantity is always 1 in this case -->
+                </div>
+                <div style="flex: 2; text-align: right;">
+                    @item.Price
+                </div>
+                <button class="btn btn-outline-danger" style="margin-left: 10px;" @onclick="() => RemoveItem(item)">X</button>
             </li>
         }
     </ul>
-    <p style="display: flex; align-items:center; justify-content:center; font-weight:bold;">
-        Total: @BillService.TotalAmount
+    <p style="display: flex; align-items:center; justify-content:center; font-weight:bold; margin-top:10px;">
+        <span style="flex: 1;">Total:</span>
+        <span style="flex: 1; text-align: right;">@BillService.TotalAmount</span>
     </p>
     <button class="btn btn-outline-danger" style="margin: 2vh 0 0 35%;" @onclick="ClearAllItems">Clear All</button>
 </div>
