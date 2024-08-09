@@ -95,7 +95,7 @@ a, .btn-link {
 
 
 .rate-item-image img {
-    width: 40px;
+    width: 70px;
     height: auto;
     margin-bottom: 10px;
 }
@@ -104,6 +104,8 @@ a, .btn-link {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    margin-top: 10px; 
 }
 
     .rate-item-details span {
@@ -111,3 +113,103 @@ a, .btn-link {
         font-weight: bold;
         color: darkgreen;
     }
+
+
+
+.rate-list {
+    border-left: 1px solid #ddd;
+    padding: 2vw;
+    width: 30vw;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+    .rate-list h3 {
+        text-align: center;
+        font-weight: bold;
+        color: #333;
+        padding-bottom: 2vh;
+    }
+
+.rate-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rate-item-card {
+    flex: 1 1 calc(33% - 10px);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+    .rate-item-card:hover {
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+
+
+
+.rate-item-name {
+    display: block;
+    font-weight: bold;
+    color: #333;
+}
+
+.rate-item-price {
+    display: block;
+    color: #4CAF50; /* Green color */
+}
+
+
+
+/*Client Styling*/
+
+
+.total-amount-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    padding: 2vh;
+    border-top: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.total-amount-container h3 {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1vh;
+}
+
+.total-amount {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4CAF50; /* Green color */
+    margin: 0;
+}
+
+.btn-clear {
+    padding: 10px 20px;
+    font-size: 1.25rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    color: #721c24;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .btn-clear:hover {
+        background-color: #f5c6cb;
+        color: #491217;
+    }
+
+
+
+/*Bill Component*/
+
+
