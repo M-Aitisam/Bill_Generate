@@ -14,6 +14,7 @@ public class BillService
     {
         if (!SelectedItems.Any(i => i.Name == item.Name)) // Check if item already exists
         {
+            item.BasePrice = item.Price; // Store the original price as BasePrice
             SelectedItems.Add(item);
             NotifyStateChanged();
         }
@@ -29,6 +30,17 @@ public class BillService
     {
         SelectedItems.Clear();
         NotifyStateChanged();
+    }
+
+    public void UpdateItem(RateList.RateItem updatedItem)
+    {
+        var item = SelectedItems.FirstOrDefault(i => i.Name == updatedItem.Name);
+        if (item != null)
+        {
+            item.Quantity = updatedItem.Quantity;
+            item.Price = updatedItem.BasePrice * updatedItem.Quantity; // Calculate price as BasePrice * Quantity
+            NotifyStateChanged();
+        }
     }
 
     private void NotifyStateChanged()

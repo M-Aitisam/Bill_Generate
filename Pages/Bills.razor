@@ -11,7 +11,7 @@
                 <th style="padding: 10px; text-align: left; font-weight: bold;">Item Name</th>
                 <th style="padding: 10px; text-align: center; font-weight: bold;">Quantity</th>
                 <th style="padding: 10px; text-align: right; font-weight: bold;">Price</th>
-                <th style="padding: 10px; text-align: center; font-weight: bold;">Action</th>
+                <th style="padding: 10px; text-align: center; font-weight: bold;">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,10 +19,22 @@
             {
                 <tr style="border-bottom: 1px solid #ddd;">
                     <td style="padding: 10px; font-weight: bold;">@item.Name</td>
-                    <td style="padding: 10px; text-align: center;">1</td> <!-- Assuming quantity is always 1 in this case -->
+                    <td style="padding: 10px; text-align: center;">
+                        @if (item.IsEditing)
+                        {
+                            <input type="number" style="width: 50px;" @bind="item.Quantity" @bind:event="oninput" />
+                        }
+                        else
+                        {
+                            @item.Quantity
+                        }
+                    </td>
                     <td style="padding: 10px; text-align: right;">@item.Price</td>
                     <td style="padding: 10px; text-align: center;">
-                        <button class="btn btn-outline-danger" style="padding: 5px 10px; border: none; border-radius: 5px; background-color: #f8d7da; color: #721c24; cursor: pointer; transition: background-color 0.3s, color 0.3s;" @onclick="() => RemoveItem(item)">X</button>
+                        <button class="btn btn-outline-primary" style="padding: 5px 10px; margin-right: 5px;" @onclick="() => ToggleEditItem(item)">
+                            @(item.IsEditing ? "Save" : "Edit")
+                        </button>
+                        <button class="btn btn-outline-danger" style="padding: 5px 10px;" @onclick="() => RemoveItem(item)">X</button>
                     </td>
                 </tr>
             }
@@ -32,7 +44,7 @@
         <span>Total:</span>
         <span>@BillService.TotalAmount</span>
     </p>
-    <button class="btn btn-outline-danger" style="margin: 2vh auto 0; display: block; padding: 10px 20px; border: none; border-radius: 5px; background-color: #f8d7da; color: #721c24; cursor: pointer; transition: background-color 0.3s, color 0.3s;" @onclick="ClearAllItems">Clear All</button>
+    <button class="btn btn-outline-danger" style="margin: 2vh auto 0; display: block; padding: 10px 20px;" @onclick="ClearAllItems">Clear All</button>
 </div>
 
 @code {
@@ -44,6 +56,18 @@
     public void Dispose()
     {
         BillService.OnChange -= async () => await InvokeAsync(StateHasChanged);
+    }
+
+    private void ToggleEditItem(RateList.RateItem item)
+    {
+        item.IsEditing = !item.IsEditing;
+
+        if (!item.IsEditing)
+        {
+            // Calculate the price as BasePrice * Quantity * 2 when saving
+            item.Price = item.BasePrice * item.Quantity * 2;
+            BillService.UpdateItem(item);
+        }
     }
 
     private void RemoveItem(RateList.RateItem item)
