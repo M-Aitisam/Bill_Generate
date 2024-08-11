@@ -5,7 +5,7 @@
 
 <div class="rate-list" style="border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
     <h3>Rate List</h3>
-    <hr />
+    <hr />  
     <div class="rate-list-container">
         @foreach (var item in RateItems)
         {
@@ -28,15 +28,15 @@
 @code {
     public List<RateItem> RateItems { get; set; } = new List<RateItem>
     {
-        new RateItem { Name = "Haircut", Price = 200, ImageUrl = "/images/haircut_short.png" },
+        new RateItem { Name = "Haircut", Price = 200, ImageUrl = "/images/shave.png" },
         new RateItem { Name = "Shave", Price = 150, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Beard Trim", Price = 100, ImageUrl = "/images/shavep.png" },
-        new RateItem { Name = "Hair Coloring", Price = 500, ImageUrl = "/images/hair_coloring.jpg" },
-        new RateItem { Name = "Hair Styling", Price = 250, ImageUrl = "/images/hair_styling.jpg" },
-        new RateItem { Name = "Facial", Price = 400, ImageUrl = "/images/facial.jpg" },
-        new RateItem { Name = "Manicure", Price = 350, ImageUrl = "/images/manicure.jpg" },
-        new RateItem { Name = "Pedicure", Price = 400, ImageUrl = "/images/pedicure.jpg" },
-        new RateItem { Name = "Head Massage", Price = 200, ImageUrl = "/images/head_massage.jpg" }
+        new RateItem { Name = "Beard Trim", Price = 100, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Hair Coloring", Price = 500, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Hair Styling", Price = 250, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Facial", Price = 400, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Manicure", Price = 350, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Pedicure", Price = 400, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Head Massage", Price = 200, ImageUrl = "/images/shave.png" }
     };
 
     private void AddToBill(RateItem item)

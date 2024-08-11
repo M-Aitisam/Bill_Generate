@@ -1,14 +1,27 @@
 ﻿@page "/clientinformation"
 @inject BillService BillService
 
-<div class="client-information">
+<div class="client-information" >
    
     <hr />
-    <div style=" display:flex; align-items:center; justify-content:space-between">
+    <div style=" display:flex; align-items:center; justify-content:space-between; ">
     <p class="total-amount">
         Total: @BillService.TotalAmount.ToString("C")
     </p>
-    <button class="btn-clear" @onclick="ClearTotalAmount">Clear</button>
+       
+       
+        <button class="btn-53 btn-clear" @onclick="ClearTotalAmount">
+            <div class="original">Clear</div>
+            <div class="letters">
+
+                <span>C</span>
+                <span>l</span>
+                <span>e</span>
+                <span>a</span>
+                <span>r</span>
+              
+            </div>
+        </button>
 </div>
 </div>
 

@@ -28,7 +28,14 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    private async Task OnToggleChanged(ChangeEventArgs e)
+    {
+    bool isChecked = (bool)e.Value;
+    await JS.InvokeVoidAsync("updateBackgroundColor", isChecked);
+    }
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="js/site.js"></script>
+
 </body>
 </html>
