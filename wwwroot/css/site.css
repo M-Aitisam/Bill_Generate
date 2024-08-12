@@ -2,8 +2,8 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    /*color:white;
-    background-color:black;*/
+    /*color:white;*/
+    background-color:black;
     overflow:hidden;
 }
 
@@ -209,6 +209,21 @@ a, .btn-link {
         color: #491217;
     }
 
+.btn-clear-btn {
+    padding: 10px 20px;
+    font-size: 1.25rem;
+    background-color: black;
+    color: #721c24;
+    transition: background-color 0.3s, color 0.3s;
+    border-color:rgba(0, 0, 0, 0.2);
+}
+
+    .btn-clear-btn:hover {
+        background-color: #f5c6cb;
+        color: #491217;
+    }
+
+
 
 
 /*button code start*/
@@ -225,7 +240,7 @@ a, .btn-link {
 .btn-53 {
     -webkit-tap-highlight-color: transparent;
     -webkit-appearance: button;
-    background-color: #000;
+    border:2px solid black;
     background-image: none;
     color: #fff;
     cursor: pointer;
