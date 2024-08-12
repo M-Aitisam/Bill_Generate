@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 public class BillService
 {
@@ -21,6 +22,7 @@ public class BillService
             SelectedItems.Add(item);
             NotifyStateChanged();
         }
+       
     }
 
     public void RemoveItem(RateList.RateItem item)
