@@ -3,9 +3,9 @@
 @using System.Collections.Generic
 @inject BillService BillService
 
-<div class="rate-list" style="border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+<div class="rate-list">
     <h3>Rate List</h3>
-    <hr />  
+    <hr />
     <div class="rate-list-container">
         @foreach (var item in RateItems)
         {
@@ -18,7 +18,7 @@
                 </div>
                 <div class="rate-item-details">
                     <span class="rate-item-name">@item.Name</span>
-                    <span class="rate-item-price">@item.Price.ToString("C")</span>
+                    <span class="rate-item-price">@item.BasePrice.ToString("C")</span>
                 </div>
             </div>
         }
@@ -28,30 +28,38 @@
 @code {
     public List<RateItem> RateItems { get; set; } = new List<RateItem>
     {
-        new RateItem { Name = "Haircut", Price = 200, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Shave", Price = 150, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Beard Trim", Price = 100, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Hair Coloring", Price = 500, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Hair Styling", Price = 250, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Facial", Price = 400, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Manicure", Price = 350, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Pedicure", Price = 400, ImageUrl = "/images/shave.png" },
-        new RateItem { Name = "Head Massage", Price = 200, ImageUrl = "/images/shave.png" }
+        new RateItem { Name = "Haircut", BasePrice = 200, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Shave", BasePrice = 150, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Beard Trim", BasePrice = 100, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Hair Coloring", BasePrice = 500, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Hair Styling", BasePrice = 250, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Facial", BasePrice = 400, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Manicure", BasePrice = 350, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Pedicure", BasePrice = 400, ImageUrl = "/images/shave.png" },
+        new RateItem { Name = "Head Massage", BasePrice = 200, ImageUrl = "/images/shave.png" }
     };
 
     private void AddToBill(RateItem item)
     {
-        BillService.AddItem(item);
+        var billItem = new RateItem
+            {
+                Name = item.Name,
+                BasePrice = item.BasePrice,
+                Price = item.BasePrice * item.Quantity,
+                Quantity = item.Quantity,
+                ImageUrl = item.ImageUrl
+            };
+
+        BillService.AddItem(billItem);
     }
+
     public class RateItem
     {
         public string? Name { get; set; }
-        public decimal BasePrice { get; set; } // The original price for 1 quantity
+        public decimal BasePrice { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; } = 1;
-
-        public bool IsEditing { get; set; } = false; // To toggle the edit mode
+        public bool IsEditing { get; set; } = false;
         public string ImageUrl { get; set; } = string.Empty;
     }
-    
 }
