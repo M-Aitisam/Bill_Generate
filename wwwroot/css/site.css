@@ -3,8 +3,7 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     /*color:white;*/
-    background-color:black;
-  
+    background-color: #004346;
 }
 
 h1:focus {
@@ -73,9 +72,9 @@ a, .btn-link {
 
 .rate-list {
     border-left: 1px solid #ddd;
-    padding:7px;
+    padding: 7px;
     width: 27vw;
-    background-color: #f9f9f9;
+    background-color: #EAE4E9;
     border-radius: 8px;
 }
 
@@ -167,19 +166,19 @@ a, .btn-link {
     width: 80%;
     border: 1px solid #ddd;
     border-radius: 8px;
-    background-color: #1B1E1F;
-
+    background-color: #EAE4E9;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin: 0 auto;
+    color: #333;
 }
 
 .bills-header {
     text-align: center;
     color: #333;
-    padding-bottom: 3.5vh;
+    padding-bottom: 1.4vh;
     font-weight: bold;
-    border-bottom: 0.5px solid #1B1E1F;
-    margin-bottom: 1vh;
+    margin:-2.8vh 0vw  2vh 0vw;
+   
 }
 
 .bills-table {
@@ -202,11 +201,13 @@ a, .btn-link {
 
     .bills-table td {
         text-align: center;
+      
     }
+  
 
-.quantity-input {
-    width: 50px;
-}
+    .quantity-input {
+        width: 50px;
+    }
 
 .total {
     display: flex;
