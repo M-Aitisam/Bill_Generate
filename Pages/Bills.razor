@@ -1,7 +1,6 @@
 ﻿@page "/bills"
 @inject BillService BillService
 
-
 <div class="bills-container">
     <h3 class="bills-header">
         Bills
@@ -20,20 +19,18 @@
             {
                 <tr>
                     <td>@item.Name</td>
-                    <td>
-                        @if (item.IsEditing)
-                        {
-                            <input type="number" class="quantity-input" @bind="item.Quantity" @bind:event="oninput" />
-                        }
-                        else
-                        {
-                            @item.Quantity
-                        }
-                    </td>
+                    <td>@item.Quantity</td>
                     <td>@item.Price</td>
                     <td>
-                        <button class="btn btn-outline-primary edit-button" @onclick="() => ToggleEditItem(item)">
-                            @(item.IsEditing ? "Save" : "Edit")
+                        <button class="btn btn-outline-primary" @onclick="() => IncreaseQuantity(item)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" height="20" width="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                        <button class="btn btn-outline-primary" @onclick="() => DecreaseQuantity(item)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" height="20" width="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                            </svg>
                         </button>
                         <button class="btn btn-outline-danger delete-button" @onclick="() => RemoveItem(item)">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" height="25" width="25">
@@ -58,7 +55,6 @@
     </button>
 </div>
 
-
 @code {
     protected override void OnInitialized()
     {
@@ -70,14 +66,19 @@
         BillService.OnChange -= async () => await InvokeAsync(StateHasChanged);
     }
 
-    private void ToggleEditItem(RateList.RateItem item)
+    private void IncreaseQuantity(RateList.RateItem item)
     {
-        item.IsEditing = !item.IsEditing;
+        item.Quantity++;
+        item.Price = item.BasePrice * item.Quantity;
+        BillService.UpdateItem(item);
+    }
 
-        if (!item.IsEditing)
+    private void DecreaseQuantity(RateList.RateItem item)
+    {
+        if (item.Quantity > 1)
         {
-            // Calculate the price as BasePrice * Quantity * 2 when saving
-            item.Price = item.BasePrice * item.Quantity * 2;
+            item.Quantity--;
+            item.Price = item.BasePrice * item.Quantity;
             BillService.UpdateItem(item);
         }
     }
