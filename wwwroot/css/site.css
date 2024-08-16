@@ -186,6 +186,7 @@ a, .btn-link {
     border-collapse: collapse;
     margin-top: 1vh;
     
+    
 }
 
     .bills-table th,
@@ -197,6 +198,8 @@ a, .btn-link {
 
     .bills-table th {
         text-align: center;
+        color:green;
+        font-size:1.2rem;
     }
 
     .bills-table td {
