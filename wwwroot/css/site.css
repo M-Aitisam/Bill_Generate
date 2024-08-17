@@ -1,6 +1,5 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     /*color:white;*/
@@ -69,21 +68,6 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
-
-.nav-bar-horizontal {
-    width: 100%;
-}
-
-.navbar-nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding-left: 0;
-}
-
-.nav-item {
-    margin-right: 1rem;
-}
 
 
 .rate-list {
@@ -253,6 +237,7 @@ a, .btn-link {
     .bills-table th,
     .bills-table td {
         padding: 8px;
+       
     }
 
     .quantity-input {
@@ -276,6 +261,7 @@ a, .btn-link {
     .clear-button {
         padding: 6px 12px;
     }
+   
 }
 
 

@@ -12,11 +12,12 @@
 }
 
 .oi {
-    width: 2rem;
+    width: 1rem;
     font-size: 1.1rem;
-    vertical-align: text-top;
+   
     top: -2px;
 }
+
 
 .nav-item {
     font-size: 0.9rem;
@@ -66,3 +67,5 @@
         overflow-y: auto;
     }
 }
+
+
