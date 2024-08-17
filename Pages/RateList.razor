@@ -4,9 +4,7 @@
 @inject BillService BillService
 
 <div class="rate-list">
-    <h3>Rate List</h3>
-    <hr />
-    <div class="rate-list-container">
+      <div class="rate-list-container">
         @foreach (var item in RateItems)
         {
             <div class="rate-item-card" @onclick="() => AddToBill(item)">
