@@ -160,7 +160,7 @@ a, .btn-link {
     }
 }
 
-
+/* Bill component */
 .bills-container {
     padding: 2vw;
     width: 80%;
@@ -175,43 +175,60 @@ a, .btn-link {
 .bills-header {
     text-align: center;
     color: #333;
-    padding-bottom: 1.4vh;
+    padding-bottom: 1vh;
     font-weight: bold;
-    margin:-2.8vh 0vw  2vh 0vw;
-   
+    margin-bottom: 2vh;
+    font-size: 1.5rem;
 }
+
 
 .bills-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1vh;
-    
-    
 }
 
     .bills-table th,
     .bills-table td {
-        
-        text-align: left;
+        text-align: center;
         font-weight: bold;
+        padding: 10px;
     }
 
     .bills-table th {
-        text-align: center;
-        color:green;
-        font-size:1.2rem;
+        color: green;
+        font-size: 1.2rem;
     }
 
     .bills-table td {
-        text-align: center;
-      
-    }
-  
-
-    .quantity-input {
-        width: 50px;
+        font-size: 1rem;
     }
 
+.action-buttons{
+
+   
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+}
+.action-buttons button {
+    padding: 5px;
+    margin: 2px;
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+.delete-button {
+    padding: 4px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
 .total {
     display: flex;
     align-items: center;
@@ -220,6 +237,7 @@ a, .btn-link {
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid #ddd;
+    font-size: 1.2rem;
 }
 
 .clear-button {
@@ -233,11 +251,15 @@ a, .btn-link {
     .bills-container {
         width: 90vw;
     }
+    .bills-header {
+        font-size: 1.2rem;
+    }
+
 
     .bills-table th,
     .bills-table td {
         padding: 8px;
-       
+        font-size: 0.9rem;
     }
 
     .quantity-input {
@@ -247,21 +269,122 @@ a, .btn-link {
     .clear-button {
         padding: 8px 16px;
     }
+
+    .total {
+        font-size: 1rem;
+    }
+    .action-buttons button {
+        padding: 4px;
+        width: 25px;
+        height: 25px;
+    }
+
+    .delete-button {
+        padding: 4px;
+        width: 30px;
+        height: 30px;
+        
+        
+       
+    }
 }
 
 @media (max-width: 480px) {
     .bills-container {
         width: 95vw;
+        padding: 4vw;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .bills-header {
+        font-size: 1rem;
+        padding-bottom: 1vh;
     }
 
     .bills-header {
-        font-size: 1.2em;
+        font-size: 1em;
+        padding-bottom: 1vh;
+    }
+
+    .bills-table th,
+    .bills-table td {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+
+    .quantity-input {
+        width: 35px;
     }
 
     .clear-button {
         padding: 6px 12px;
+        font-size: 0.9rem;
     }
-   
+
+    .total {
+        font-size: 0.9rem;
+        padding-top: 8px;
+    }
+    .action-buttons button {
+        padding: 3px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .delete-button {
+        padding: 3px;
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media (max-width: 700px) and (min-width:479px) {
+    .bills-container {
+        width: 95vw;
+        padding: 4vw;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .bills-header {
+        font-size: 1rem;
+        padding-bottom: 1vh;
+    }
+
+    .bills-header {
+        font-size: 1em;
+        padding-bottom: 1vh;
+    }
+
+    .bills-table th,
+    .bills-table td {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+
+    .quantity-input {
+        width: 35px;
+    }
+
+    .clear-button {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    .total {
+        font-size: 0.9rem;
+        padding-top: 8px;
+    }
+
+    .action-buttons button {
+        padding: 3px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .delete-button {
+        padding: 3px;
+        width: 25px;
+        height: 25px;
+    }
 }
 
 
