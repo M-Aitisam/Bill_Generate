@@ -1,19 +1,21 @@
 ﻿@page "/clientinformation"
 @inject BillService BillService
-@inject NavigationManager NavigationManager
 
-<div class="bg-light p-2 border-bottom border-danger">
+<div class="p-2">
 
     <div>
-        <div class="d-flex">
+        <div class="d-flex gap-3">
+            <!-- Add the gap class here -->
             <div>
                 <select @bind="client.BarberName" class="form-control">
+                    <option value="" disabled selected>Select Barber Name</option> <!-- Placeholder option -->
                     @foreach (var barber in barbers)
                     {
                         <option value="@barber">@barber</option>
                     }
                 </select>
             </div>
+
             <div>
                 <input type="text" class="form-control"
                        @bind="client.FirstName" placeholder="Customer Name" />
@@ -22,67 +24,21 @@
                 <input type="text" class="form-control"
                        @bind="client.PhoneNumber" placeholder="Customer Phone" />
             </div>
-            <div>
-                <button @onclick="async () => await SaveAndNavigate()"
-                        class="btn btn-outline-success">
-                    Add to Bill
-                </button>
-            </div>
         </div>
     </div>
+
 </div>
 
 @code {
     private Client client = new Client();
-    private Client? savedClient;
+
     private List<string> barbers = new List<string> { "John", "Jane", "Alex", "Sam", "Moiz", "Shoaib" };
-    private decimal amountPaid;
-    private decimal? changeAmount;
-    private bool isError = false;
-    private string errorMessage = string.Empty;
 
     public class Client
     {
         public string? FirstName { get; set; }
         public string? PhoneNumber { get; set; }
         public string? BarberName { get; set; }
-    }
-
-    
-
-    
-
-    private void CalculateChange()
-    {
-        isError = false;
-        errorMessage = string.Empty;
-
-        if (amountPaid < BillService.TotalAmount)
-        {
-            isError = true;
-            errorMessage = "Amount paid cannot be less than the total amount.";
-            changeAmount = null;
-        }
-        else if (amountPaid <= 0)
-        {
-            isError = true;
-            errorMessage = "Amount paid must be greater than zero.";
-            changeAmount = null;
-        }
-        else
-        {
-            changeAmount = amountPaid - BillService.TotalAmount;
-        }
-    }
-
-    private void ClearTotalAmount()
-    {
-        BillService.ClearAllItems();
-    }
-
-    private void NavigateToBillDetail()
-    {
-        NavigationManager.NavigateTo("/billDetail");
     }
 
     protected override void OnInitialized()
