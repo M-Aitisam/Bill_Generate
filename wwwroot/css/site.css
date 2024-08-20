@@ -70,3 +70,26 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
+
+
+/*rate list card code  start    */
+.rate-card {
+    cursor: pointer;
+}
+
+    .rate-card .card {
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+        .rate-card .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .rate-card .card:active {
+            background-color: #f8f9fa; /* Light background */
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+
+/*rate list card code  End    */
+

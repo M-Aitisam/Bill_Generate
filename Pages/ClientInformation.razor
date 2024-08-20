@@ -1,5 +1,6 @@
 ﻿@page "/clientinformation"
 @inject BillService BillService
+@inject NavigationManager NavigationManager
 
 <div class="bg-light p-2 border-bottom border-danger">
 
@@ -16,33 +17,19 @@
             <div>
                 <input type="text" class="form-control"
                        @bind="client.FirstName" placeholder="Customer Name" />
-
             </div>
             <div>
                 <input type="text" class="form-control"
                        @bind="client.PhoneNumber" placeholder="Customer Phone" />
             </div>
             <div>
-                <button @onclick="AddToBill"
+                <button @onclick="async () => await SaveAndNavigate()"
                         class="btn btn-outline-success">
                     Add to Bill
                 </button>
-
             </div>
-
         </div>
-
     </div>
-
-
-
-
-
-
-
-
-
-
 </div>
 
 @code {
@@ -61,18 +48,9 @@
         public string? BarberName { get; set; }
     }
 
-    private async Task AddToBill()
-    {
-        savedClient = new Client
-            {
-                FirstName = client.FirstName,
-                PhoneNumber = client.PhoneNumber,
-                BarberName = client.BarberName,
-            };
+    
 
-        client = new Client();
-        await InvokeAsync(StateHasChanged);
-    }
+    
 
     private void CalculateChange()
     {
@@ -100,6 +78,11 @@
     private void ClearTotalAmount()
     {
         BillService.ClearAllItems();
+    }
+
+    private void NavigateToBillDetail()
+    {
+        NavigationManager.NavigateTo("/billDetail");
     }
 
     protected override void OnInitialized()
