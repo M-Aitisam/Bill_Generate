@@ -2,13 +2,11 @@
 @inject BillService BillService
 
 <div class="p-2">
-
     <div>
         <div class="d-flex gap-3">
-            <!-- Add the gap class here -->
             <div>
                 <select @bind="client.BarberName" class="form-control">
-                    <option value="" disabled selected>Select Barber Name</option> <!-- Placeholder option -->
+                    <option value="" disabled selected>Select Barber Name</option>
                     @foreach (var barber in barbers)
                     {
                         <option value="@barber">@barber</option>
@@ -26,7 +24,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @code {
@@ -43,11 +40,11 @@
 
     protected override void OnInitialized()
     {
-        BillService.OnChange += async () => await InvokeAsync(StateHasChanged);
+        BillService.OnChange += StateHasChanged;
     }
 
     public void Dispose()
     {
-        BillService.OnChange -= async () => await InvokeAsync(StateHasChanged);
+        BillService.OnChange -= StateHasChanged;
     }
 }

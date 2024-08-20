@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Blazored.LocalStorage;
 using Bill_Generate.Models;
-using Bill_Generate.Pages;
-
+using Bill_Generate.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +13,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddSingleton<BillService>();
-
-
+builder.Services.AddScoped<BillService>(); // Changed from AddSingleton to AddScoped
 
 var app = builder.Build();
 
@@ -24,6 +21,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 
 app.UseStaticFiles();
