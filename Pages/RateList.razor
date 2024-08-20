@@ -3,24 +3,28 @@
 @using System.Collections.Generic
 @inject BillService BillService
 
-<div class="rate-list">
-    <div class="rate-list-container">
-          @foreach (var item in RateItems)
-        {
-            <div class="rate-item-card" @onclick="() => AddToBill(item)">
-                <div class="rate-item-image">
-                    @if (!string.IsNullOrEmpty(item.ImageUrl))
-                    {
-                        <img src="@item.ImageUrl" alt="@item.Name" />
-                    }
-                </div>
-                <div class="rate-item-details">
-                    <span class="rate-item-name">@item.Name</span>
-                    <span class="rate-item-price">@item.BasePrice.ToString("C")</span>
+
+<div class="row">
+    @foreach (var item in RateItems)
+    {
+        <div class="col-3 text-center mb-2 " @onclick="() => AddToBill(item)">
+            <div class="card">
+                <div class="card-body">
+
+                    <div>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Name" width="40" />
+                        }
+                    </div>
+                    <div>
+                        <span class="small">@item.Name</span><br />
+                        <span>@item.BasePrice.ToString("C")</span>
+                    </div>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code {

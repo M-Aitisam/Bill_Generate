@@ -5,12 +5,38 @@
 
 <PageTitle>Bill Generate</PageTitle>
 
-<div>   
-<div style="display: flex; justify-content:space-between;margin-top:-1rem; padding:1rem;gap: 10px;">
-    <RateList />
-    <Bills />
-</div>
+<div>
+    <div class="fixed-top">
+        <ClientInformation />
+    </div>
+  
+    <div>
+        <div class="container-fluid vh-100">
+          
+            <div class="row pt-5">
+                <div class="col-md-7">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <RateList />
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="col-md-5">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <Bills />
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+           
+        </div>
 
-<ClientInformation />
+
+    </div>
+   
+
 </div>
 
