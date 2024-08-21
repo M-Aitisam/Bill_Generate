@@ -1,4 +1,6 @@
 ﻿@page "/"
+
+@layout BillLayout
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @namespace Bill_Generate.Pages
@@ -7,7 +9,7 @@
 
 <div>
     <div class="fixed-top">
-        <ClientInformation />
+        <BrandTitleBar></BrandTitleBar>
     </div>
   
     <div>
