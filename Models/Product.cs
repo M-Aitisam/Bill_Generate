@@ -7,6 +7,8 @@
         public string? ProductTitle { get; set; }
         public decimal ProductPrice { get; set; }
         public bool IsActive { get; set; }
+
+        public bool IsSelected { get; set; }
         public string? ImgUrl { get; set; }
     }
 

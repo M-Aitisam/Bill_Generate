@@ -4,132 +4,120 @@
 @using System.IO
 
 <div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h3>Add New Product</h3>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label for="productId">Product ID:</label>
-                <input type="number" class="form-control" id="productId" @bind="Product.ProductId" />
-            </div>
+    <div>
+        <EditForm Model="newProduct" OnValidSubmit="AddProduct">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-            <div class="form-group">
-                <label for="productCode">Product Code:</label>
-                <input type="text" class="form-control" id="productCode" @bind="Product.ProductCode" />
-            </div>
-
-            <div class="form-group">
-                <label for="productTitle">Product Title:</label>
-                <input type="text" class="form-control" id="productTitle" @bind="Product.ProductTitle" />
-            </div>
-
-            <div class="form-group">
-                <label for="productPrice">Product Price:</label>
-                <input type="number" class="form-control" step="0.01" id="productPrice" @bind="Product.ProductPrice" />
-            </div>
-
-            <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input me-2" id="isActive" @bind="Product.IsActive" />
-                <label class="form-check-label" for="isActive">Is Active</label>
-            </div>
-
-            <div class="form-group">
-                <label for="imgUrl">Image URL:</label>
-                <input type="text" class="form-control" id="imgUrl" @bind="Product.ImgUrl" />
-            </div>
-
-            <button class="btn btn-success" @onclick="SaveProduct">Save Product</button>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <h3>Product List</h3>
-        <button class="btn btn-danger mb-3" @onclick="DeleteAllProducts">Delete All Products</button>
-
-        <ul class="list-group">
-            @foreach (var product in ProductList)
-            {
-                <li class="list-group-item">
-                    <input type="checkbox" class="form-check-input me-2" @onchange="(e) => ToggleProductSelection(product, (bool)e.Value)" />
-                    @product.ProductTitle - @product.ProductPrice
-                </li>
-            }
-        </ul>
-    </div>
-
-    <div class="mt-4">
-        @if (SelectedProducts.Any())
-        {
-            <div class="card">
-                <div class="card-header bg-secondary text-white">
-                    <h4>Selected Products</h4>
+            <div class="row">
+                <div class="col-md-2">
+                    <InputText id="productTitle" class="form-control" placeholder="Enter Product Title" @bind-Value="newProduct.ProductTitle" />
                 </div>
-                <div class="card-body">
-                    <ul>
-                        @foreach (var selectedProduct in SelectedProducts)
+                <div class="col-md-2">
+                    <InputText id="productCode" class="form-control" placeholder="Enter Product Code" @bind-Value="newProduct.ProductCode" />
+                </div>
+                <div class="col-md-2">
+                    <InputNumber id="productPrice" class="form-control" placeholder="Enter Price" @bind-Value="newProduct.ProductPrice" />
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check form-switch">
+                        <InputCheckbox @bind-Value="newProduct.IsActive" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Is Active</label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success">Add Product</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Code</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ProductList.Any())
+                    {
+                        @foreach (var product in ProductList)
                         {
-                            <li>
-                                <p><strong>Product Code:</strong> @selectedProduct.ProductCode</p>
-                                <p><strong>Product Title:</strong> @selectedProduct.ProductTitle</p>
-                                <p><strong>Product Price:</strong> @selectedProduct.ProductPrice</p>
-                                <p><strong>Is Active:</strong> @selectedProduct.IsActive</p>
-                                <img src="@selectedProduct.ImgUrl" alt="Product Image" class="img-fluid" style="max-width: 100px;" />
-                            </li>
+                            <tr>
+                                <td>@product.ProductTitle</td>
+                                <td>@product.ProductCode</td>
+                                <td>@product.ProductPrice.ToString("C")</td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input" @bind="product.IsSelected" /> @(product.IsActive ? "Active" : "Inactive")
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="() => DeleteProduct(product)">Delete</button>
+                                </td>
+                            </tr>
                         }
-                    </ul>
-                </div>
-            </div>
-        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">No products available.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 @code {
-    private Product Product { get; set; } = new Product();
     private List<Product> ProductList { get; set; } = new List<Product>();
-    private List<Product> SelectedProducts { get; set; } = new List<Product>();
+    private Product newProduct { get; set; } = new Product();
 
     protected override async Task OnInitializedAsync()
     {
         await LoadProducts();
     }
 
-    private void DeleteAllProducts()
+    private async Task AddProduct()
     {
-        ProductList.Clear();
-        SelectedProducts.Clear();
+        // Add the new product to the product list
+        ProductList.Add(newProduct);
+        await SaveProductsToFile();
+        // Reset the form
+        newProduct = new Product();
+    }
+
+    private async Task DeleteProduct(Product product)
+    {
+        // Remove the product from the list
+        ProductList.Remove(product);
+        await SaveProductsToFile();
     }
 
     private async Task LoadProducts()
     {
-        if (File.Exists("Product.json"))
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
+        if (File.Exists(filePath))
         {
-            var existingProductsJson = await File.ReadAllTextAsync("Product.json");
+            var existingProductsJson = await File.ReadAllTextAsync(filePath);
             ProductList = JsonSerializer.Deserialize<List<Product>>(existingProductsJson) ?? new List<Product>();
-        }
-    }
-
-    private async Task SaveProduct()
-    {
-        ProductList.Add(Product);
-
-        var productListJson = JsonSerializer.Serialize(ProductList);
-        await File.WriteAllTextAsync("Product.json", productListJson);
-
-        Product = new Product();
-
-        await LoadProducts();
-    }
-
-    private void ToggleProductSelection(Product product, bool isSelected)
-    {
-        if (isSelected)
-        {
-            SelectedProducts.Add(product);
         }
         else
         {
-            SelectedProducts.Remove(product);
+            // Handle file not found scenario
+            Console.WriteLine("Product.json file not found.");
         }
+    }
+
+    private async Task SaveProductsToFile()
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
+        var productListJson = JsonSerializer.Serialize(ProductList);
+        await File.WriteAllTextAsync(filePath, productListJson);
     }
 }
