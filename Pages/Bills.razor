@@ -156,14 +156,14 @@
         BillService.OnChange -= async () => await InvokeAsync(StateHasChanged);
     }
 
-    private void IncreaseQuantity(RateList.RateItem item)
+    private void IncreaseQuantity(RateItem item)
     {
         item.Quantity++;
         item.Price = item.BasePrice * item.Quantity;
         BillService.UpdateItem(item);
     }
 
-    private void DecreaseQuantity(RateList.RateItem item)
+    private void DecreaseQuantity(RateItem item)
     {
         if (item.Quantity > 1)
         {
@@ -173,7 +173,7 @@
         }
     }
 
-    private void RemoveItem(RateList.RateItem item)
+    private void RemoveItem(RateItem item)
     {
         BillService.RemoveItem(item);
     }

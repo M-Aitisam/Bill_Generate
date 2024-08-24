@@ -1,4 +1,5 @@
 ﻿using Bill_Generate.Pages;
+using Bill_Generate.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,13 @@ namespace Bill_Generate.Services
 {
     public class BillService
     {
-        public List<RateList.RateItem> SelectedItems { get; private set; } = new List<RateList.RateItem>();
+        public List<RateItem> SelectedItems { get; private set; } = new List<RateItem>();
 
         public decimal TotalAmount => SelectedItems.Sum(item => item.Price);
 
         public event Action? OnChange;
 
-        public void AddItem(RateList.RateItem item)
+        public void AddItem(RateItem item)
         {
             var existingItem = SelectedItems.FirstOrDefault(i => i.Name == item.Name);
             if (existingItem != null)
@@ -30,7 +31,7 @@ namespace Bill_Generate.Services
             NotifyStateChanged();
         }
 
-        public void RemoveItem(RateList.RateItem item)
+        public void RemoveItem(RateItem item)
         {
             SelectedItems.Remove(item);
             NotifyStateChanged();
@@ -51,7 +52,7 @@ namespace Bill_Generate.Services
             NotifyStateChanged();
         }
 
-        public void UpdateItem(RateList.RateItem updatedItem)
+        public void UpdateItem(RateItem updatedItem)
         {
             var item = SelectedItems.FirstOrDefault(i => i.Name == updatedItem.Name);
             if (item != null)
