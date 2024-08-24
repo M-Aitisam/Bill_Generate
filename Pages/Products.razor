@@ -37,6 +37,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
+                        <th>Icons</th>
                         <th>Title</th>
                         <th>Code</th>
                         <th>Price</th>
@@ -46,15 +47,19 @@
                 </thead>
                 <tbody>
                     @if (ProductList.Any())
+
                     {
                         @foreach (var product in ProductList)
+
                         {
                             <tr>
                                 <td>@product.ProductTitle</td>
+                                <td>@product.ImageUrl</td>
                                 <td>@product.ProductCode</td>
                                 <td>@product.ProductPrice.ToString("C")</td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input" @bind="product.IsSelected" /> @(product.IsActive ? "Active" : "Inactive")
+                                    <input type="checkbox" class="form-check-input" checked="@product.IsActive" @onchange="(e) => ToggleActiveStatus(product, e.Value)" />
+                                    @(product.IsActive ? "Active" : "Inactive")
                                 </td>
                                 <td>
                                     <button class="btn btn-danger" @onclick="() => DeleteProduct(product)">Delete</button>
@@ -62,7 +67,9 @@
                             </tr>
                         }
                     }
+
                     else
+
                     {
                         <tr>
                             <td colspan="5">No products available.</td>
@@ -76,48 +83,97 @@
 
 @code {
     private List<Product> ProductList { get; set; } = new List<Product>();
+
     private Product newProduct { get; set; } = new Product();
 
+
+
     protected override async Task OnInitializedAsync()
+
     {
+
         await LoadProducts();
+
     }
+
+
 
     private async Task AddProduct()
+
     {
-        // Add the new product to the product list
+
         ProductList.Add(newProduct);
+
         await SaveProductsToFile();
-        // Reset the form
+
         newProduct = new Product();
+
     }
+
+
 
     private async Task DeleteProduct(Product product)
+
     {
-        // Remove the product from the list
+
         ProductList.Remove(product);
+
         await SaveProductsToFile();
+
     }
+
+
+
+    private async Task ToggleActiveStatus(Product product, object value)
+
+    {
+
+        product.IsActive = (bool)value;
+
+        await SaveProductsToFile();
+
+    }
+
+
 
     private async Task LoadProducts()
+
     {
+
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
+
         if (File.Exists(filePath))
+
         {
+
             var existingProductsJson = await File.ReadAllTextAsync(filePath);
+
             ProductList = JsonSerializer.Deserialize<List<Product>>(existingProductsJson) ?? new List<Product>();
+
         }
+
         else
+
         {
-            // Handle file not found scenario
+
             Console.WriteLine("Product.json file not found.");
+
         }
+
     }
 
+
+
     private async Task SaveProductsToFile()
+
     {
+
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
+
         var productListJson = JsonSerializer.Serialize(ProductList);
+
         await File.WriteAllTextAsync(filePath, productListJson);
+
     }
 }
+
