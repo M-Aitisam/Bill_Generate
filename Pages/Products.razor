@@ -3,6 +3,7 @@
 @using System.Text.Json
 @using System.IO
 @inject BillService BillService
+@inject NavigationManager Navigation
 
 <div class="container mt-4">
     <div>
@@ -74,34 +75,11 @@
             </table>
         </div>
     </div>
-
-    <div class="row mt-5">
-        @foreach (var item in RateList)
-        {
-            <div class="col-3 text-center mb-2 rate-card" @onclick="() => AddToBill(item)">
-                <div class="card">
-                    <div class="card-body">
-                        <div>
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                <img src="@item.ImageUrl" alt="@item.Name" width="40" />
-                            }
-                        </div>
-                        <div>
-                            <span class="small">@item.Name</span><br />
-                            <span>@item.BasePrice.ToString("C")</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
 </div>
 
 @code {
     private List<Product> ProductList { get; set; } = new List<Product>();
     private Product newProduct { get; set; } = new Product();
-    private List<RateItem> RateList { get; set; } = new List<RateItem>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,29 +88,34 @@
 
     private async Task AddProduct()
     {
+        // Add product to the product list
         ProductList.Add(newProduct);
 
+        // Create a corresponding RateItem and add it to the BillService's RateItems list
         var rateItem = new RateItem
             {
                 Name = newProduct.ProductTitle,
                 BasePrice = newProduct.ProductPrice,
-                ImageUrl = "" // You can add the image URL here if you have one
+                ImageUrl = "/images/spray1.png" // Default image or make it dynamic based on your requirement
             };
 
-        RateList.Add(rateItem);
+        // Add the rate item to the list in BillService
+        BillService.AddRateItem(rateItem);
 
+        // Save the product list to the file
         await SaveProductsToFile();
+
+        // Reset the form
         newProduct = new Product();
     }
 
     private async Task DeleteProduct(Product product)
     {
         ProductList.Remove(product);
-        RateList.RemoveAll(r => r.Name == product.ProductTitle); // Remove from RateList
         await SaveProductsToFile();
     }
 
-    private async Task ToggleActiveStatus(Product product, object value)
+    private async Task ToggleActiveStatus(Product product, object? value)
     {
         if (value is bool boolValue)
         {
@@ -153,14 +136,6 @@
         {
             Console.WriteLine("Product.json file not found.");
         }
-
-        // Populate RateList from ProductList
-        RateList = ProductList.Select(p => new RateItem
-            {
-                Name = p.ProductTitle,
-                BasePrice = p.ProductPrice,
-                ImageUrl = "" // Adjust accordingly
-            }).ToList();
     }
 
     private async Task SaveProductsToFile()
@@ -168,10 +143,5 @@
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
         var productListJson = JsonSerializer.Serialize(ProductList);
         await File.WriteAllTextAsync(filePath, productListJson);
-    }
-
-    private void AddToBill(RateItem item)
-    {
-        // Add your logic to add this item to the bill here
     }
 }

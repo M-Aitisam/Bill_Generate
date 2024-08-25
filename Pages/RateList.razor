@@ -1,16 +1,13 @@
 ﻿@page "/ratelist"
-
 @using System.Collections.Generic
 @inject BillService BillService
 
-
-<div class="row">
-    @foreach (var item in RateItems)
+<div class="row mt-5">
+    @foreach (var item in BillService.RateItems)
     {
         <div class="col-3 text-center mb-2 rate-card" @onclick="() => AddToBill(item)">
             <div class="card">
                 <div class="card-body">
-
                     <div>
                         @if (!string.IsNullOrEmpty(item.ImageUrl))
                         {
@@ -28,36 +25,13 @@
 </div>
 
 @code {
-    public List<RateItem> RateItems { get; set; } = new List<RateItem>
+    protected override void OnInitialized()
     {
-        new RateItem { Name = "Buzz-cut", BasePrice = 200, ImageUrl = "/images/buzzcut.png" },
-        new RateItem { Name = "Shaving", BasePrice = 150, ImageUrl = "/images/shave (2).png" },
-        new RateItem { Name = "Beard Trim", BasePrice = 100, ImageUrl = "/images/scissor.png" },
-        new RateItem { Name = "Hair Coloring", BasePrice = 500, ImageUrl = "/images/hair-color.png" },
-        new RateItem { Name = "Hair Styling", BasePrice = 250, ImageUrl = "/images/hair-styling.png" },
-        new RateItem { Name = "Facial", BasePrice = 400, ImageUrl = "/images/facial.png" },
-        new RateItem { Name = "Manicure", BasePrice = 350, ImageUrl = "/images/manicure1.png" },
-        new RateItem { Name = "Trim-Haircut", BasePrice = 400, ImageUrl = "/images/trim-haircut.png" },
-        new RateItem { Name = "Massage", BasePrice = 200, ImageUrl = "/images/massage-head.png" },
-        new RateItem { Name = " Head", BasePrice = 350, ImageUrl = "/images/heat.png" },
-        new RateItem { Name = "Face-Wash", BasePrice = 400, ImageUrl = "/images/face.png" },
-        new RateItem { Name = "Spray ", BasePrice =50, ImageUrl = "/images/spray1.png" }
-
-    };
+        BillService.OnChange += StateHasChanged;
+    }
 
     private void AddToBill(RateItem item)
     {
-        var billItem = new RateItem
-            {
-                Name = item.Name,
-                BasePrice = item.BasePrice,
-                Price = item.BasePrice * item.Quantity,
-                Quantity = item.Quantity,
-                ImageUrl = item.ImageUrl
-            };
-
-        BillService.AddItem(billItem);
+        BillService.AddItem(item);
     }
-
-
 }

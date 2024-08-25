@@ -8,11 +8,11 @@ namespace Bill_Generate.Services
 {
     public class BillService
     {
+        public List<RateItem> RateItems { get; set; } = new List<RateItem>();
         public List<RateItem> SelectedItems { get; private set; } = new List<RateItem>();
 
         public decimal TotalAmount => SelectedItems.Sum(item => item.Price);
 
-        public event Action? OnChange;
 
         public void AddItem(RateItem item)
         {
@@ -24,7 +24,6 @@ namespace Bill_Generate.Services
             }
             else
             {
-                item.BasePrice = item.Price; // Store the original price as BasePrice
                 item.Quantity = 1; // Set the initial quantity to 1
                 SelectedItems.Add(item);
             }
@@ -34,6 +33,11 @@ namespace Bill_Generate.Services
         public void RemoveItem(RateItem item)
         {
             SelectedItems.Remove(item);
+            NotifyStateChanged();
+        }
+        public void AddRateItem(RateItem item)
+        {
+            RateItems.Add(item);
             NotifyStateChanged();
         }
 
@@ -63,6 +67,7 @@ namespace Bill_Generate.Services
             }
         }
 
+        public event Action? OnChange;
         private void NotifyStateChanged()
         {
             OnChange?.Invoke();
