@@ -22,6 +22,15 @@
                     <InputNumber id="productPrice" class="form-control" placeholder="Enter Price" @bind-Value="newProduct.ProductPrice" />
                 </div>
                 <div class="col-md-2">
+                    <InputSelect id="productImageUrl" class="form-control" @bind-Value="newProduct.ImageUrl">
+                        <option value="">Select Image</option>
+                        @foreach (var imgUrl in ImageUrls)
+                        {
+                            <option value="@imgUrl">@imgUrl</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="col-md-2">
                     <div class="form-check form-switch">
                         <InputCheckbox @bind-Value="newProduct.IsActive" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
                         <label class="form-check-label" for="flexSwitchCheckChecked">Is Active</label>
@@ -43,6 +52,7 @@
                         <th>Code</th>
                         <th>Price</th>
                         <th>Status</th>
+                        <th>Image</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -60,6 +70,9 @@
                                     @(product.IsActive ? "Active" : "Inactive")
                                 </td>
                                 <td>
+                                    <img src="@product.ImageUrl" alt="@product.ProductTitle" style="width: 50px; height: 50px;" />
+                                </td>
+                                <td>
                                     <button class="btn btn-danger" @onclick="() => DeleteProduct(product)" disabled="@product.IsActive">Delete</button>
                                 </td>
                             </tr>
@@ -68,7 +81,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="5">No products available.</td>
+                            <td colspan="6">No products available.</td>
                         </tr>
                     }
                 </tbody>
@@ -80,6 +93,31 @@
 @code {
     private List<Product> ProductList { get; set; } = new List<Product>();
     private Product newProduct { get; set; } = new Product();
+    private List<string> ImageUrls { get; set; } = new List<string>
+    {
+        "/images/buzzcut.png",
+        "/images/face.png",
+        "/images/hair-color.png",
+        "/images/facial.png",
+        "/images/hair-spray.png",
+        "/images/hair-styling.png",
+        "/images/heat.png",
+        "/images/manicure1.png",
+        "/images/message-head.png",
+        "/images/scissor.png",
+        "/images/shave (2).png",
+        "/images/hair-color.png",
+        "/images/spray.png",
+        "/images/spray1.png",
+        "/images/trim-haircut.png",
+        "/images/face.png",
+
+
+
+
+
+        // Add more image paths here
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,7 +134,7 @@
             {
                 Name = newProduct.ProductTitle,
                 BasePrice = newProduct.ProductPrice,
-                ImageUrl = "/images/spray1.png", // Default image or make it dynamic based on your requirement
+                ImageUrl = newProduct.ImageUrl, // Selected image URL
                 IsActive = newProduct.IsActive
             };
 
@@ -129,7 +167,6 @@
             Console.WriteLine("Product or ProductTitle is null. Cannot remove the product.");
         }
     }
-
 
     private async Task ToggleActiveStatus(Product product, object? value)
     {
