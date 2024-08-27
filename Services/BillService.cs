@@ -1,5 +1,6 @@
 ﻿using Bill_Generate.Pages;
 using Bill_Generate.Models;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,17 @@ namespace Bill_Generate.Services
 {
     public class BillService
     {
+        private readonly string rateItemsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/RateItems.json");
+
         public List<RateItem> RateItems { get; set; } = new List<RateItem>();
         public List<RateItem> SelectedItems { get; private set; } = new List<RateItem>();
 
         public decimal TotalAmount => SelectedItems.Sum(item => item.Price);
 
+        public BillService()
+        {
+            LoadRateItemsFromFile();
+        }
 
         public void AddItem(RateItem item)
         {
@@ -35,9 +42,11 @@ namespace Bill_Generate.Services
             SelectedItems.Remove(item);
             NotifyStateChanged();
         }
+
         public void AddRateItem(RateItem item)
         {
             RateItems.Add(item);
+            SaveRateItemsToFile(); // Save to file after adding
             NotifyStateChanged();
         }
 
@@ -45,6 +54,17 @@ namespace Bill_Generate.Services
         {
             SelectedItems.Clear();
             NotifyStateChanged();
+        }
+
+        public void RemoveRateItem(string productName)
+        {
+            var rateItem = RateItems.FirstOrDefault(x => x.Name == productName);
+            if (rateItem != null && !rateItem.IsActive)
+            {
+                RateItems.Remove(rateItem);
+                SaveRateItemsToFile(); // Save to file after removing
+                NotifyStateChanged();
+            }
         }
 
         public void ClearTotalAmount()
@@ -68,9 +88,28 @@ namespace Bill_Generate.Services
         }
 
         public event Action? OnChange;
+
         private void NotifyStateChanged()
         {
             OnChange?.Invoke();
         }
+
+        // Method to save RateItems to file
+        private void SaveRateItemsToFile()
+        {
+            var rateItemsJson = JsonSerializer.Serialize(RateItems);
+            File.WriteAllText(rateItemsFilePath, rateItemsJson);
+        }
+
+        // Method to load RateItems from file
+        private void LoadRateItemsFromFile()
+        {
+            if (File.Exists(rateItemsFilePath))
+            {
+                var rateItemsJson = File.ReadAllText(rateItemsFilePath);
+                RateItems = JsonSerializer.Deserialize<List<RateItem>>(rateItemsJson) ?? new List<RateItem>();
+            }
+        }
     }
+
 }

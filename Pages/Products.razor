@@ -60,7 +60,7 @@
                                     @(product.IsActive ? "Active" : "Inactive")
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger" @onclick="() => DeleteProduct(product)">Delete</button>
+                                    <button class="btn btn-danger" @onclick="() => DeleteProduct(product)" disabled="@product.IsActive">Delete</button>
                                 </td>
                             </tr>
                         }
@@ -96,7 +96,8 @@
             {
                 Name = newProduct.ProductTitle,
                 BasePrice = newProduct.ProductPrice,
-                ImageUrl = "/images/spray1.png" // Default image or make it dynamic based on your requirement
+                ImageUrl = "/images/spray1.png", // Default image or make it dynamic based on your requirement
+                IsActive = newProduct.IsActive
             };
 
         // Add the rate item to the list in BillService
@@ -111,15 +112,38 @@
 
     private async Task DeleteProduct(Product product)
     {
-        ProductList.Remove(product);
-        await SaveProductsToFile();
+        if (product != null && !string.IsNullOrEmpty(product.ProductTitle))
+        {
+            // Remove the product from the product list
+            ProductList.Remove(product);
+
+            // Remove the corresponding rate item from the BillService
+            BillService.RemoveRateItem(product.ProductTitle);
+
+            // Save the updated product list to the file
+            await SaveProductsToFile();
+        }
+        else
+        {
+            // Handle the case where product or ProductTitle is null
+            Console.WriteLine("Product or ProductTitle is null. Cannot remove the product.");
+        }
     }
+
 
     private async Task ToggleActiveStatus(Product product, object? value)
     {
         if (value is bool boolValue)
         {
             product.IsActive = boolValue;
+
+            // Update the corresponding RateItem's active status
+            var rateItem = BillService.RateItems.FirstOrDefault(x => x.Name == product.ProductTitle);
+            if (rateItem != null)
+            {
+                rateItem.IsActive = boolValue;
+            }
+
             await SaveProductsToFile();
         }
     }

@@ -7,7 +7,7 @@
             public decimal BasePrice { get; set; }
             public decimal Price { get; set; }
             public int Quantity { get; set; } = 1;
-            public bool IsEditing { get; set; } = false;
+            public bool IsActive { get; set; } = false;
             public string? ImageUrl { get; set; } = string.Empty;
         
     }

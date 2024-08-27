@@ -5,7 +5,7 @@
 <div class="row mt-5">
     @foreach (var item in BillService.RateItems)
     {
-        <div class="col-3 text-center mb-2 rate-card" @onclick="() => AddToBill(item)">
+        <div class="col-3 text-center mb-2 rate-card" @onclick="() => AddToBill(item)" style="opacity: @(item.IsActive ? "1" : "0.5"); pointer-events: @(item.IsActive ? "auto" : "none");">
             <div class="card">
                 <div class="card-body">
                     <div>
