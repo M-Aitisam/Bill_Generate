@@ -3,6 +3,9 @@
 @inject BillService BillService
 
 <div class="row mt-5">
+
+    @if (BillService.RateItems.Any(i => i.IsActive))
+    {
     @foreach (var item in BillService.RateItems.Where(i => i.IsActive))
     {
         <div class="col-3 text-center mb-2 rate-card" @onclick="() => AddToBill(item)">
@@ -21,6 +24,12 @@
                 </div>
             </div>
         </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <p>No card available</p></div>
     }
 </div>
 
