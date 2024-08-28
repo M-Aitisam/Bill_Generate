@@ -1,1 +1,1 @@
-[{"Name":"Aitisam","BasePrice":109,"Price":0,"Quantity":1,"IsActive":true,"ImageUrl":"/images/face.png"}]
+[{"Name":"Cutting","BasePrice":20,"Price":0,"Quantity":1,"IsActive":true,"ImageUrl":"/images/trim-haircut.png"},{"Name":"Buzz Cut","BasePrice":120,"Price":0,"Quantity":1,"IsActive":true,"ImageUrl":"/images/buzzcut.png"}]

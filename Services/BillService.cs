@@ -32,6 +32,7 @@ namespace Bill_Generate.Services
             else
             {
                 item.Quantity = 1; // Set the initial quantity to 1
+                item.Price = item.BasePrice;
                 SelectedItems.Add(item);
             }
             NotifyStateChanged();
@@ -72,6 +73,7 @@ namespace Bill_Generate.Services
             foreach (var item in SelectedItems)
             {
                 item.Price = 0;
+                item.Quantity = 0;
             }
             NotifyStateChanged();
         }
