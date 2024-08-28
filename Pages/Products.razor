@@ -26,6 +26,8 @@
                         <option value="">Select Image</option>
                         @foreach (var imgUrl in ImageUrls)
 
+
+
                         {
                             <option value="@imgUrl">@imgUrl</option>
                         }
@@ -60,8 +62,12 @@
                 <tbody>
                     @if (ProductList.Any())
 
+
+
                     {
                         @foreach (var product in ProductList)
+
+
 
                         {
                             <tr>
@@ -82,7 +88,11 @@
                         }
                     }
 
+
+
                     else
+
+
 
                     {
                         <tr>
@@ -98,7 +108,11 @@
 @code {
     private List<Product> ProductList { get; set; } = new List<Product>();
 
+
+
     private Product newProduct { get; set; } = new Product();
+
+
 
     private List<string> ImageUrls { get; set; } = new List<string>
     {
@@ -121,32 +135,16 @@
         // Add more image paths here
     };
 
-
-
     protected override async Task OnInitializedAsync()
-
     {
-
         await LoadProducts();
-
         UpdateRateItems(); // Ensure RateItems are updated
-
     }
-
-
-
     private async Task AddProduct()
-
     {
-
         // Add product to the product list
-
         ProductList.Add(newProduct);
-
-
-
         // Create a corresponding RateItem and add it to the BillService's RateItems list
-
         var rateItem = new RateItem
             {
                 Name = newProduct.ProductTitle,
@@ -154,182 +152,81 @@
                 ImageUrl = newProduct.ImageUrl, // Selected image URL
                 IsActive = newProduct.IsActive
             };
-
-
-
         // Add the rate item to the list in BillService
-
         BillService.AddRateItem(rateItem);
-
-
-
         // Save the product list to the file
-
         await SaveProductsToFile();
-
-
-
         // Reset the form
-
         newProduct = new Product();
-
     }
-
-
-
     private async Task DeleteProduct(Product product)
-
     {
-
         if (product != null && !string.IsNullOrEmpty(product.ProductTitle))
-
-        {
-
-            // Remove the product from the product list
-
+        {            // Remove the product from the product list
             ProductList.Remove(product);
-
-
-
             // Remove the corresponding rate item from the BillService
-
             BillService.RemoveRateItem(product.ProductTitle);
-
-
-
             // Save the updated product list to the file
-
             await SaveProductsToFile();
-
-
-
             // Ensure RateItems are updated
-
             UpdateRateItems();
-
         }
-
         else
-
         {
-
             // Handle the case where product or ProductTitle is null
-
             Console.WriteLine("Product or ProductTitle is null. Cannot remove the product.");
-
         }
-
     }
-
-
-
     private async Task ToggleActiveStatus(Product product, object? value)
-
     {
-
         if (value is bool boolValue)
-
         {
-
             product.IsActive = boolValue;
-
-
-
             // Update the corresponding RateItem's active status
-
             var rateItem = BillService.RateItems.FirstOrDefault(x => x.Name == product.ProductTitle);
-
             if (rateItem != null)
-
             {
-
                 rateItem.IsActive = boolValue;
-
             }
-
-
-
             await SaveProductsToFile();
-
             UpdateRateItems();
-
         }
-
     }
-
-
-
     private async Task LoadProducts()
-
     {
-
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
-
         if (File.Exists(filePath))
-
         {
-
             var existingProductsJson = await File.ReadAllTextAsync(filePath);
-
             ProductList = JsonSerializer.Deserialize<List<Product>>(existingProductsJson) ?? new List<Product>();
-
         }
-
         else
-
         {
-
             Console.WriteLine("Product.json file not found.");
-
         }
-
     }
-
-
-
     private async Task SaveProductsToFile()
-
     {
-
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
-
         var productListJson = JsonSerializer.Serialize(ProductList);
-
         await File.WriteAllTextAsync(filePath, productListJson);
-
     }
-
-
-
     private void UpdateRateItems()
-
     {
-
         // Update RateItems list to ensure only active items are present
-
         var activeItems = ProductList.Where(p => p.IsActive)
+         .Select(p => new RateItem
 
-                                     .Select(p => new RateItem
-                                         {
-                                             Name = p.ProductTitle,
-                                             BasePrice = p.ProductPrice,
-                                             ImageUrl = p.ImageUrl,
-                                             IsActive = p.IsActive
-                                         })
-
-                                     .ToList();
-
-
-
+             {
+                 Name = p.ProductTitle,
+                 BasePrice = p.ProductPrice,
+                 ImageUrl = p.ImageUrl,
+                 IsActive = p.IsActive
+             })  .ToList();
         BillService.RateItems.Clear();
-
         foreach (var item in activeItems)
-
         {
-
             BillService.RateItems.Add(item);
-
         }
-
     }
 }
