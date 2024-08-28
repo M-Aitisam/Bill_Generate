@@ -25,9 +25,6 @@
                     <InputSelect id="productImageUrl" class="form-control" @bind-Value="newProduct.ImageUrl">
                         <option value="">Select Image</option>
                         @foreach (var imgUrl in ImageUrls)
-
-
-
                         {
                             <option value="@imgUrl">@imgUrl</option>
                         }
@@ -35,7 +32,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-check form-switch">
-                        <InputCheckbox @bind-Value="newProduct.IsActive" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
+                        <InputCheckbox @bind-Value="newProduct.IsActive" class="form-check-input" id="flexSwitchCheckChecked" />
                         <label class="form-check-label" for="flexSwitchCheckChecked">Is Active</label>
                     </div>
                 </div>
@@ -61,14 +58,8 @@
                 </thead>
                 <tbody>
                     @if (ProductList.Any())
-
-
-
                     {
                         @foreach (var product in ProductList)
-
-
-
                         {
                             <tr>
                                 <td>@product.ProductTitle</td>
@@ -82,18 +73,13 @@
                                     <img src="@product.ImageUrl" alt="@product.ProductTitle" style="width: 50px; height: 50px;" />
                                 </td>
                                 <td>
+                                    <button class="btn btn-warning" @onclick="() => EditProduct(product)">Edit</button>
                                     <button class="btn btn-danger" @onclick="() => DeleteProduct(product)" disabled="@product.IsActive">Delete</button>
                                 </td>
                             </tr>
                         }
                     }
-
-
-
                     else
-
-
-
                     {
                         <tr>
                             <td colspan="6">No products available.</td>
@@ -106,15 +92,11 @@
 </div>
 
 @code {
-    private List<Product> ProductList { get; set; } = new List<Product>();
+    private List<Product> ProductList { get; set; } = new();
+    private Product newProduct { get; set; } = new();
+    private Product? editingProduct { get; set; }
 
-
-
-    private Product newProduct { get; set; } = new Product();
-
-
-
-    private List<string> ImageUrls { get; set; } = new List<string>
+    private List<string> ImageUrls { get; set; } = new()
     {
         "/images/buzzcut.png",
         "/images/face.png",
@@ -140,58 +122,84 @@
         await LoadProducts();
         UpdateRateItems(); // Ensure RateItems are updated
     }
+
     private async Task AddProduct()
     {
-        // Add product to the product list
-        ProductList.Add(newProduct);
-        // Create a corresponding RateItem and add it to the BillService's RateItems list
+        if (editingProduct == null)
+        {
+            ProductList.Add(newProduct);
+        }
+        else
+        {
+            // Update the existing product
+            var index = ProductList.IndexOf(editingProduct);
+            if (index != -1)
+            {
+                ProductList[index] = newProduct;
+            }
+        }
+
         var rateItem = new RateItem
             {
                 Name = newProduct.ProductTitle,
                 BasePrice = newProduct.ProductPrice,
-                ImageUrl = newProduct.ImageUrl, // Selected image URL
+                ImageUrl = newProduct.ImageUrl,
                 IsActive = newProduct.IsActive
             };
-        // Add the rate item to the list in BillService
-        BillService.AddRateItem(rateItem);
-        // Save the product list to the file
+
+        if (editingProduct == null)
+        {
+            BillService.AddRateItem(rateItem);
+        }
+        else
+        {
+            var existingRateItem = BillService.RateItems.FirstOrDefault(x => x.Name == editingProduct.ProductTitle);
+            if (existingRateItem != null)
+            {
+                existingRateItem.Name = newProduct.ProductTitle;
+                existingRateItem.BasePrice = newProduct.ProductPrice;
+                existingRateItem.ImageUrl = newProduct.ImageUrl;
+                existingRateItem.IsActive = newProduct.IsActive;
+            }
+        }
+
         await SaveProductsToFile();
-        // Reset the form
         newProduct = new Product();
+        editingProduct = null;
     }
+
     private async Task DeleteProduct(Product product)
     {
         if (product != null && !string.IsNullOrEmpty(product.ProductTitle))
-        {            // Remove the product from the product list
+        {
             ProductList.Remove(product);
-            // Remove the corresponding rate item from the BillService
             BillService.RemoveRateItem(product.ProductTitle);
-            // Save the updated product list to the file
             await SaveProductsToFile();
-            // Ensure RateItems are updated
             UpdateRateItems();
         }
         else
         {
-            // Handle the case where product or ProductTitle is null
             Console.WriteLine("Product or ProductTitle is null. Cannot remove the product.");
         }
     }
+
     private async Task ToggleActiveStatus(Product product, object? value)
     {
         if (value is bool boolValue)
         {
             product.IsActive = boolValue;
-            // Update the corresponding RateItem's active status
+
             var rateItem = BillService.RateItems.FirstOrDefault(x => x.Name == product.ProductTitle);
             if (rateItem != null)
             {
                 rateItem.IsActive = boolValue;
             }
+
             await SaveProductsToFile();
             UpdateRateItems();
         }
     }
+
     private async Task LoadProducts()
     {
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
@@ -205,28 +213,44 @@
             Console.WriteLine("Product.json file not found.");
         }
     }
+
     private async Task SaveProductsToFile()
     {
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data/Product.json");
         var productListJson = JsonSerializer.Serialize(ProductList);
         await File.WriteAllTextAsync(filePath, productListJson);
     }
+
     private void UpdateRateItems()
     {
-        // Update RateItems list to ensure only active items are present
-        var activeItems = ProductList.Where(p => p.IsActive)
-         .Select(p => new RateItem
+        var activeItems = ProductList
+            .Where(p => p.IsActive)
+            .Select(p => new RateItem
+                {
+                    Name = p.ProductTitle,
+                    BasePrice = p.ProductPrice,
+                    ImageUrl = p.ImageUrl,
+                    IsActive = p.IsActive
+                })
+            .ToList();
 
-             {
-                 Name = p.ProductTitle,
-                 BasePrice = p.ProductPrice,
-                 ImageUrl = p.ImageUrl,
-                 IsActive = p.IsActive
-             })  .ToList();
         BillService.RateItems.Clear();
         foreach (var item in activeItems)
         {
             BillService.RateItems.Add(item);
         }
+    }
+
+    private void EditProduct(Product product)
+    {
+        editingProduct = product;
+        newProduct = new Product
+            {
+                ProductTitle = product.ProductTitle,
+                ProductCode = product.ProductCode,
+                ProductPrice = product.ProductPrice,
+                ImageUrl = product.ImageUrl,
+                IsActive = product.IsActive
+            };
     }
 }
