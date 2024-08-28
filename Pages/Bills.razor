@@ -68,13 +68,13 @@
     </div>
 
     <div class="border p-5" style="max-height:70vh; min-height:60vh; overflow-y:scroll">
-        <table class="table small">
+        <table class="table small   ">
             <thead>
                 <tr>
                     <th>Item Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
-                    <th>Actions</th>
+                    <th class="ml-10">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,7 +82,7 @@
                 {
                     @foreach (var item in BillService.SelectedItems)
                     {
-                                        <tr>
+                        <tr >
                                             <td>@item.Name</td>
                                             <td>@item.Quantity</td>
                                             <td>@item.Price</td>
@@ -137,7 +137,7 @@
         else if (amountPaid <= 0)
         {
             isError = true;
-            errorMessage = "Amount paid must be greater than zero.";
+            errorMessage = "Sorry, You can paid less amount.";
             changeAmount = null;
         }
         else
