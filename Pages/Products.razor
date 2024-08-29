@@ -22,13 +22,30 @@
                     <InputNumber id="productPrice" class="form-control" placeholder="Enter Price" @bind-Value="newProduct.ProductPrice" />
                 </div>
                 <div class="col-md-2">
-                    <InputSelect id="productImageUrl" class="form-control" @bind-Value="newProduct.ImageUrl">
-                        <option value="">Select Image</option>
-                        @foreach (var imgUrl in ImageUrls)
-                        {
-                            <option value="@imgUrl">@imgUrl</option>
-                        }
-                    </InputSelect>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" @onclick="ToggleDropdown">
+                            @if (string.IsNullOrEmpty(newProduct.ImageUrl))
+                            {
+                                <span>Select Image</span>
+                            }
+                            else
+                            {
+                                <img src="@newProduct.ImageUrl" alt="Selected Image" style="width: 20px; height: 20px; margin-right: 10px;" />
+                                <span>@Path.GetFileName(newProduct.ImageUrl)</span>
+                            }
+                        </button>
+                        <ul class="dropdown-menu" style="display: @(isDropdownOpen ? "block" : "none");" aria-labelledby="dropdownMenuButton">
+                            @foreach (var imgUrl in ImageUrls)
+                            {
+                                <li>
+                                    <a class="dropdown-item" @onclick="() => SelectImage(imgUrl)">
+                                        <img src="@imgUrl" alt="@Path.GetFileName(imgUrl)" style="width: 25px; height: 25px; margin-right: 10px;" />
+                                        <span>@Path.GetFileName(imgUrl)</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-check form-switch">
@@ -106,7 +123,7 @@
         "/images/hair-styling.png",
         "/images/heat.png",
         "/images/manicure1.png",
-        "/images/message-head.png",
+        "/images/massage-head.png",
         "/images/scissor.png",
         "/images/shave (2).png",
         "/images/hair-color.png",
@@ -117,10 +134,23 @@
         // Add more image paths here
     };
 
+    private bool isDropdownOpen = false;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadProducts();
         UpdateRateItems(); // Ensure RateItems are updated
+    }
+
+    private void ToggleDropdown()
+    {
+        isDropdownOpen = !isDropdownOpen;
+    }
+
+    private void SelectImage(string imageUrl)
+    {
+        newProduct.ImageUrl = imageUrl;
+        isDropdownOpen = false;
     }
 
     private async Task AddProduct()
